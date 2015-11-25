@@ -1,999 +1,395 @@
 Created by PLY version 3.8 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    LLAVEDER
+    LLAVEIZQ
+
 Grammar
 
 Rule 0     S' -> statement
-Rule 1     statement -> expression
-Rule 2     statement -> expression2
-Rule 3     expression2 -> expression SUPER expression
-Rule 4     expression2 -> expression SUB expression
-Rule 5     expression2 -> expression2 DIVISION expression2
-Rule 6     expression2 -> expression2 DIVISION expression
-Rule 7     expression2 -> expression DIVISION expression2
-Rule 8     expression2 -> expression DIVISION expression
-Rule 9     expression2 -> expression SUPER expression SUB expression
-Rule 10    expression2 -> expression SUB expression SUPER expression
-Rule 11    expression -> LLAVEIZQ expression2 LLAVEDER
-Rule 12    expression -> LLAVEIZQ expression LLAVEDER
-Rule 13    expression -> PARENIZQ expression2 PARENDER
-Rule 14    expression -> PARENIZQ expression PARENDER
-Rule 15    expression2 -> expression2 expression2
-Rule 16    expression2 -> expression expression2
-Rule 17    expression2 -> expression2 expression
-Rule 18    expression2 -> expression expression
-Rule 19    expression -> CARACTER
+Rule 1     statement -> div
+Rule 2     term -> factor factor1
+Rule 3     factor1 -> lambda
+Rule 4     factor1 -> SUPER factor factor2
+Rule 5     factor1 -> SUB factor factor3
+Rule 6     factor2 -> lambda
+Rule 7     factor2 -> SUB factor
+Rule 8     factor3 -> lambda
+Rule 9     factor3 -> SUPER factor
+Rule 10    expression -> term1 term
+Rule 11    term1 -> lambda
+Rule 12    term1 -> term1 term
+Rule 13    div -> div1 expression
+Rule 14    div1 -> lambda
+Rule 15    div1 -> div1 expression DIVISION
+Rule 16    factor -> PARENIZQ div PARENDER
+Rule 17    factor -> CARACTER
+Rule 18    lambda -> <empty>
 
 Terminals, with rules where they appear
 
-CARACTER             : 19
-DIVISION             : 5 6 7 8
-LLAVEDER             : 11 12
-LLAVEIZQ             : 11 12
-PARENDER             : 13 14
-PARENIZQ             : 13 14
-SUB                  : 4 9 10
-SUPER                : 3 9 10
+CARACTER             : 17
+DIVISION             : 15
+LLAVEDER             : 
+LLAVEIZQ             : 
+PARENDER             : 16
+PARENIZQ             : 16
+SUB                  : 5 7
+SUPER                : 4 9
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 1 3 3 4 4 6 7 8 8 9 9 9 10 10 10 12 14 16 17 18 18
-expression2          : 2 5 5 6 7 11 13 15 15 16 17
+div                  : 1 16
+div1                 : 13 15
+expression           : 13 15
+factor               : 2 4 5 7 9
+factor1              : 2
+factor2              : 4
+factor3              : 5
+lambda               : 3 6 8 11 14
 statement            : 0
+term                 : 10 12
+term1                : 10 12
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . statement
-    (1) statement -> . expression
-    (2) statement -> . expression2
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
+    (1) statement -> . div
+    (13) div -> . div1 expression
+    (14) div1 -> . lambda
+    (15) div1 -> . div1 expression DIVISION
+    (18) lambda -> .
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
 
-    statement                      shift and go to state 3
-    expression2                    shift and go to state 1
-    expression                     shift and go to state 6
+    div                            shift and go to state 3
+    div1                           shift and go to state 2
+    statement                      shift and go to state 1
+    lambda                         shift and go to state 4
 
 state 1
-
-    (2) statement -> expression2 .
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
-
-    $end            reduce using rule 2 (statement -> expression2 .)
-    DIVISION        shift and go to state 8
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
-
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
-
-state 2
-
-    (13) expression -> PARENIZQ . expression2 PARENDER
-    (14) expression -> PARENIZQ . expression PARENDER
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
-
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
-
-    expression2                    shift and go to state 10
-    expression                     shift and go to state 11
-
-state 3
 
     (0) S' -> statement .
 
 
 
+state 2
+
+    (13) div -> div1 . expression
+    (15) div1 -> div1 . expression DIVISION
+    (10) expression -> . term1 term
+    (11) term1 -> . lambda
+    (12) term1 -> . term1 term
+    (18) lambda -> .
+
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
+
+    term1                          shift and go to state 5
+    expression                     shift and go to state 6
+    lambda                         shift and go to state 7
+
+state 3
+
+    (1) statement -> div .
+
+    $end            reduce using rule 1 (statement -> div .)
+
+
 state 4
 
-    (19) expression -> CARACTER .
+    (14) div1 -> lambda .
 
-    SUPER           reduce using rule 19 (expression -> CARACTER .)
-    SUB             reduce using rule 19 (expression -> CARACTER .)
-    DIVISION        reduce using rule 19 (expression -> CARACTER .)
-    LLAVEIZQ        reduce using rule 19 (expression -> CARACTER .)
-    PARENIZQ        reduce using rule 19 (expression -> CARACTER .)
-    CARACTER        reduce using rule 19 (expression -> CARACTER .)
-    $end            reduce using rule 19 (expression -> CARACTER .)
-    PARENDER        reduce using rule 19 (expression -> CARACTER .)
-    LLAVEDER        reduce using rule 19 (expression -> CARACTER .)
+    PARENIZQ        reduce using rule 14 (div1 -> lambda .)
+    CARACTER        reduce using rule 14 (div1 -> lambda .)
 
 
 state 5
 
-    (11) expression -> LLAVEIZQ . expression2 LLAVEDER
-    (12) expression -> LLAVEIZQ . expression LLAVEDER
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (10) expression -> term1 . term
+    (12) term1 -> term1 . term
+    (2) term -> . factor factor1
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . CARACTER
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        shift and go to state 9
+    CARACTER        shift and go to state 10
 
-    expression2                    shift and go to state 12
-    expression                     shift and go to state 13
+    factor                         shift and go to state 8
+    term                           shift and go to state 11
 
 state 6
 
-    (1) statement -> expression .
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (13) div -> div1 expression .
+    (15) div1 -> div1 expression . DIVISION
 
-    $end            reduce using rule 1 (statement -> expression .)
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
-    DIVISION        shift and go to state 16
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENDER        reduce using rule 13 (div -> div1 expression .)
+    $end            reduce using rule 13 (div -> div1 expression .)
+    DIVISION        shift and go to state 12
 
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
 
 state 7
 
-    (15) expression2 -> expression2 expression2 .
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (11) term1 -> lambda .
 
-  ! shift/reduce conflict for DIVISION resolved as shift
-  ! shift/reduce conflict for LLAVEIZQ resolved as shift
-  ! shift/reduce conflict for PARENIZQ resolved as shift
-  ! shift/reduce conflict for CARACTER resolved as shift
-    LLAVEDER        reduce using rule 15 (expression2 -> expression2 expression2 .)
-    $end            reduce using rule 15 (expression2 -> expression2 expression2 .)
-    PARENDER        reduce using rule 15 (expression2 -> expression2 expression2 .)
-    DIVISION        shift and go to state 8
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        reduce using rule 11 (term1 -> lambda .)
+    CARACTER        reduce using rule 11 (term1 -> lambda .)
 
-  ! DIVISION        [ reduce using rule 15 (expression2 -> expression2 expression2 .) ]
-  ! LLAVEIZQ        [ reduce using rule 15 (expression2 -> expression2 expression2 .) ]
-  ! PARENIZQ        [ reduce using rule 15 (expression2 -> expression2 expression2 .) ]
-  ! CARACTER        [ reduce using rule 15 (expression2 -> expression2 expression2 .) ]
-
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
 
 state 8
 
-    (5) expression2 -> expression2 DIVISION . expression2
-    (6) expression2 -> expression2 DIVISION . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (2) term -> factor . factor1
+    (3) factor1 -> . lambda
+    (4) factor1 -> . SUPER factor factor2
+    (5) factor1 -> . SUB factor factor3
+    (18) lambda -> .
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    SUPER           shift and go to state 15
+    SUB             shift and go to state 13
+    DIVISION        reduce using rule 18 (lambda -> .)
+    $end            reduce using rule 18 (lambda -> .)
+    PARENDER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
 
-    expression2                    shift and go to state 19
-    expression                     shift and go to state 20
+    factor1                        shift and go to state 14
+    lambda                         shift and go to state 16
 
 state 9
 
-    (17) expression2 -> expression2 expression .
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (16) factor -> PARENIZQ . div PARENDER
+    (13) div -> . div1 expression
+    (14) div1 -> . lambda
+    (15) div1 -> . div1 expression DIVISION
+    (18) lambda -> .
 
-  ! shift/reduce conflict for DIVISION resolved as shift
-  ! shift/reduce conflict for LLAVEIZQ resolved as shift
-  ! shift/reduce conflict for PARENIZQ resolved as shift
-  ! shift/reduce conflict for CARACTER resolved as shift
-    LLAVEDER        reduce using rule 17 (expression2 -> expression2 expression .)
-    $end            reduce using rule 17 (expression2 -> expression2 expression .)
-    PARENDER        reduce using rule 17 (expression2 -> expression2 expression .)
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
-    DIVISION        shift and go to state 16
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
 
-  ! DIVISION        [ reduce using rule 17 (expression2 -> expression2 expression .) ]
-  ! LLAVEIZQ        [ reduce using rule 17 (expression2 -> expression2 expression .) ]
-  ! PARENIZQ        [ reduce using rule 17 (expression2 -> expression2 expression .) ]
-  ! CARACTER        [ reduce using rule 17 (expression2 -> expression2 expression .) ]
-
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
+    div1                           shift and go to state 2
+    div                            shift and go to state 17
+    lambda                         shift and go to state 4
 
 state 10
 
-    (13) expression -> PARENIZQ expression2 . PARENDER
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (17) factor -> CARACTER .
 
-    PARENDER        shift and go to state 21
-    DIVISION        shift and go to state 8
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    DIVISION        reduce using rule 17 (factor -> CARACTER .)
+    $end            reduce using rule 17 (factor -> CARACTER .)
+    PARENDER        reduce using rule 17 (factor -> CARACTER .)
+    PARENIZQ        reduce using rule 17 (factor -> CARACTER .)
+    CARACTER        reduce using rule 17 (factor -> CARACTER .)
+    SUPER           reduce using rule 17 (factor -> CARACTER .)
+    SUB             reduce using rule 17 (factor -> CARACTER .)
 
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
 
 state 11
 
-    (14) expression -> PARENIZQ expression . PARENDER
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (10) expression -> term1 term .
+    (12) term1 -> term1 term .
 
-    PARENDER        shift and go to state 22
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
-    DIVISION        shift and go to state 16
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    DIVISION        reduce using rule 10 (expression -> term1 term .)
+    $end            reduce using rule 10 (expression -> term1 term .)
+    PARENDER        reduce using rule 10 (expression -> term1 term .)
+    PARENIZQ        reduce using rule 12 (term1 -> term1 term .)
+    CARACTER        reduce using rule 12 (term1 -> term1 term .)
 
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
 
 state 12
 
-    (11) expression -> LLAVEIZQ expression2 . LLAVEDER
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (15) div1 -> div1 expression DIVISION .
 
-    LLAVEDER        shift and go to state 23
-    DIVISION        shift and go to state 8
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        reduce using rule 15 (div1 -> div1 expression DIVISION .)
+    CARACTER        reduce using rule 15 (div1 -> div1 expression DIVISION .)
 
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
 
 state 13
 
-    (12) expression -> LLAVEIZQ expression . LLAVEDER
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (5) factor1 -> SUB . factor factor3
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . CARACTER
 
-    LLAVEDER        shift and go to state 24
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
-    DIVISION        shift and go to state 16
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        shift and go to state 9
+    CARACTER        shift and go to state 10
 
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
+    factor                         shift and go to state 18
 
 state 14
 
-    (3) expression2 -> expression SUPER . expression
-    (9) expression2 -> expression SUPER . expression SUB expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (2) term -> factor factor1 .
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    DIVISION        reduce using rule 2 (term -> factor factor1 .)
+    $end            reduce using rule 2 (term -> factor factor1 .)
+    PARENDER        reduce using rule 2 (term -> factor factor1 .)
+    PARENIZQ        reduce using rule 2 (term -> factor factor1 .)
+    CARACTER        reduce using rule 2 (term -> factor factor1 .)
 
-    expression                     shift and go to state 25
 
 state 15
 
-    (16) expression2 -> expression expression2 .
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (4) factor1 -> SUPER . factor factor2
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . CARACTER
 
-  ! shift/reduce conflict for DIVISION resolved as shift
-  ! shift/reduce conflict for LLAVEIZQ resolved as shift
-  ! shift/reduce conflict for PARENIZQ resolved as shift
-  ! shift/reduce conflict for CARACTER resolved as shift
-    LLAVEDER        reduce using rule 16 (expression2 -> expression expression2 .)
-    $end            reduce using rule 16 (expression2 -> expression expression2 .)
-    PARENDER        reduce using rule 16 (expression2 -> expression expression2 .)
-    DIVISION        shift and go to state 8
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENIZQ        shift and go to state 9
+    CARACTER        shift and go to state 10
 
-  ! DIVISION        [ reduce using rule 16 (expression2 -> expression expression2 .) ]
-  ! LLAVEIZQ        [ reduce using rule 16 (expression2 -> expression expression2 .) ]
-  ! PARENIZQ        [ reduce using rule 16 (expression2 -> expression expression2 .) ]
-  ! CARACTER        [ reduce using rule 16 (expression2 -> expression expression2 .) ]
-
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
+    factor                         shift and go to state 19
 
 state 16
 
-    (7) expression2 -> expression DIVISION . expression2
-    (8) expression2 -> expression DIVISION . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (3) factor1 -> lambda .
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    DIVISION        reduce using rule 3 (factor1 -> lambda .)
+    $end            reduce using rule 3 (factor1 -> lambda .)
+    PARENDER        reduce using rule 3 (factor1 -> lambda .)
+    PARENIZQ        reduce using rule 3 (factor1 -> lambda .)
+    CARACTER        reduce using rule 3 (factor1 -> lambda .)
 
-    expression2                    shift and go to state 26
-    expression                     shift and go to state 27
 
 state 17
 
-    (4) expression2 -> expression SUB . expression
-    (10) expression2 -> expression SUB . expression SUPER expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (16) factor -> PARENIZQ div . PARENDER
 
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    PARENDER        shift and go to state 20
 
-    expression                     shift and go to state 28
 
 state 18
 
-    (18) expression2 -> expression expression .
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (5) factor1 -> SUB factor . factor3
+    (8) factor3 -> . lambda
+    (9) factor3 -> . SUPER factor
+    (18) lambda -> .
 
-  ! shift/reduce conflict for DIVISION resolved as shift
-  ! shift/reduce conflict for LLAVEIZQ resolved as shift
-  ! shift/reduce conflict for PARENIZQ resolved as shift
-  ! shift/reduce conflict for CARACTER resolved as shift
-    LLAVEDER        reduce using rule 18 (expression2 -> expression expression .)
-    $end            reduce using rule 18 (expression2 -> expression expression .)
-    PARENDER        reduce using rule 18 (expression2 -> expression expression .)
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
-    DIVISION        shift and go to state 16
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
+    SUPER           shift and go to state 21
+    DIVISION        reduce using rule 18 (lambda -> .)
+    $end            reduce using rule 18 (lambda -> .)
+    PARENDER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
 
-  ! DIVISION        [ reduce using rule 18 (expression2 -> expression expression .) ]
-  ! LLAVEIZQ        [ reduce using rule 18 (expression2 -> expression expression .) ]
-  ! PARENIZQ        [ reduce using rule 18 (expression2 -> expression expression .) ]
-  ! CARACTER        [ reduce using rule 18 (expression2 -> expression expression .) ]
-
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
+    factor3                        shift and go to state 22
+    lambda                         shift and go to state 23
 
 state 19
 
-    (5) expression2 -> expression2 DIVISION expression2 .
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (4) factor1 -> SUPER factor . factor2
+    (6) factor2 -> . lambda
+    (7) factor2 -> . SUB factor
+    (18) lambda -> .
 
-    DIVISION        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    LLAVEIZQ        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    PARENIZQ        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    CARACTER        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    LLAVEDER        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    $end            reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
-    PARENDER        reduce using rule 5 (expression2 -> expression2 DIVISION expression2 .)
+    SUB             shift and go to state 24
+    DIVISION        reduce using rule 18 (lambda -> .)
+    $end            reduce using rule 18 (lambda -> .)
+    PARENDER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 18 (lambda -> .)
+    CARACTER        reduce using rule 18 (lambda -> .)
 
-  ! DIVISION        [ shift and go to state 8 ]
-  ! LLAVEIZQ        [ shift and go to state 5 ]
-  ! PARENIZQ        [ shift and go to state 2 ]
-  ! CARACTER        [ shift and go to state 4 ]
-
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
+    factor2                        shift and go to state 25
+    lambda                         shift and go to state 26
 
 state 20
 
-    (6) expression2 -> expression2 DIVISION expression .
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (16) factor -> PARENIZQ div PARENDER .
 
-    DIVISION        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    LLAVEIZQ        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    PARENIZQ        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    CARACTER        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    LLAVEDER        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    $end            reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    PARENDER        reduce using rule 6 (expression2 -> expression2 DIVISION expression .)
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
+    DIVISION        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    $end            reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    PARENDER        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    PARENIZQ        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    CARACTER        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    SUPER           reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    SUB             reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
 
-  ! DIVISION        [ shift and go to state 16 ]
-  ! LLAVEIZQ        [ shift and go to state 5 ]
-  ! PARENIZQ        [ shift and go to state 2 ]
-  ! CARACTER        [ shift and go to state 4 ]
-
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
 
 state 21
 
-    (13) expression -> PARENIZQ expression2 PARENDER .
+    (9) factor3 -> SUPER . factor
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . CARACTER
 
-    SUPER           reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    SUB             reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    DIVISION        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    LLAVEIZQ        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    PARENIZQ        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    CARACTER        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    $end            reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    PARENDER        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
-    LLAVEDER        reduce using rule 13 (expression -> PARENIZQ expression2 PARENDER .)
+    PARENIZQ        shift and go to state 9
+    CARACTER        shift and go to state 10
 
+    factor                         shift and go to state 27
 
 state 22
 
-    (14) expression -> PARENIZQ expression PARENDER .
+    (5) factor1 -> SUB factor factor3 .
 
-    SUPER           reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    SUB             reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    DIVISION        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    LLAVEIZQ        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    PARENIZQ        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    CARACTER        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    $end            reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    PARENDER        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
-    LLAVEDER        reduce using rule 14 (expression -> PARENIZQ expression PARENDER .)
+    DIVISION        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    $end            reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    PARENDER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    PARENIZQ        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    CARACTER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
 
 
 state 23
 
-    (11) expression -> LLAVEIZQ expression2 LLAVEDER .
+    (8) factor3 -> lambda .
 
-    SUPER           reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    SUB             reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    DIVISION        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    LLAVEIZQ        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    PARENIZQ        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    CARACTER        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    $end            reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    PARENDER        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
-    LLAVEDER        reduce using rule 11 (expression -> LLAVEIZQ expression2 LLAVEDER .)
+    DIVISION        reduce using rule 8 (factor3 -> lambda .)
+    $end            reduce using rule 8 (factor3 -> lambda .)
+    PARENDER        reduce using rule 8 (factor3 -> lambda .)
+    PARENIZQ        reduce using rule 8 (factor3 -> lambda .)
+    CARACTER        reduce using rule 8 (factor3 -> lambda .)
 
 
 state 24
 
-    (12) expression -> LLAVEIZQ expression LLAVEDER .
+    (7) factor2 -> SUB . factor
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . CARACTER
 
-    SUPER           reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    SUB             reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    DIVISION        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    LLAVEIZQ        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    PARENIZQ        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    CARACTER        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    $end            reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    PARENDER        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
-    LLAVEDER        reduce using rule 12 (expression -> LLAVEIZQ expression LLAVEDER .)
+    PARENIZQ        shift and go to state 9
+    CARACTER        shift and go to state 10
 
+    factor                         shift and go to state 28
 
 state 25
 
-    (3) expression2 -> expression SUPER expression .
-    (9) expression2 -> expression SUPER expression . SUB expression
+    (4) factor1 -> SUPER factor factor2 .
 
-    DIVISION        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    LLAVEIZQ        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    PARENIZQ        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    CARACTER        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    LLAVEDER        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    $end            reduce using rule 3 (expression2 -> expression SUPER expression .)
-    PARENDER        reduce using rule 3 (expression2 -> expression SUPER expression .)
-    SUB             shift and go to state 29
+    DIVISION        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    $end            reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    PARENDER        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    PARENIZQ        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    CARACTER        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
 
 
 state 26
 
-    (7) expression2 -> expression DIVISION expression2 .
-    (5) expression2 -> expression2 . DIVISION expression2
-    (6) expression2 -> expression2 . DIVISION expression
-    (15) expression2 -> expression2 . expression2
-    (17) expression2 -> expression2 . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (6) factor2 -> lambda .
 
-    DIVISION        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    LLAVEIZQ        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    PARENIZQ        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    CARACTER        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    LLAVEDER        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    $end            reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
-    PARENDER        reduce using rule 7 (expression2 -> expression DIVISION expression2 .)
+    DIVISION        reduce using rule 6 (factor2 -> lambda .)
+    $end            reduce using rule 6 (factor2 -> lambda .)
+    PARENDER        reduce using rule 6 (factor2 -> lambda .)
+    PARENIZQ        reduce using rule 6 (factor2 -> lambda .)
+    CARACTER        reduce using rule 6 (factor2 -> lambda .)
 
-  ! DIVISION        [ shift and go to state 8 ]
-  ! LLAVEIZQ        [ shift and go to state 5 ]
-  ! PARENIZQ        [ shift and go to state 2 ]
-  ! CARACTER        [ shift and go to state 4 ]
-
-    expression2                    shift and go to state 7
-    expression                     shift and go to state 9
 
 state 27
 
-    (8) expression2 -> expression DIVISION expression .
-    (3) expression2 -> expression . SUPER expression
-    (4) expression2 -> expression . SUB expression
-    (7) expression2 -> expression . DIVISION expression2
-    (8) expression2 -> expression . DIVISION expression
-    (9) expression2 -> expression . SUPER expression SUB expression
-    (10) expression2 -> expression . SUB expression SUPER expression
-    (16) expression2 -> expression . expression2
-    (18) expression2 -> expression . expression
-    (3) expression2 -> . expression SUPER expression
-    (4) expression2 -> . expression SUB expression
-    (5) expression2 -> . expression2 DIVISION expression2
-    (6) expression2 -> . expression2 DIVISION expression
-    (7) expression2 -> . expression DIVISION expression2
-    (8) expression2 -> . expression DIVISION expression
-    (9) expression2 -> . expression SUPER expression SUB expression
-    (10) expression2 -> . expression SUB expression SUPER expression
-    (15) expression2 -> . expression2 expression2
-    (16) expression2 -> . expression expression2
-    (17) expression2 -> . expression2 expression
-    (18) expression2 -> . expression expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
+    (9) factor3 -> SUPER factor .
 
-    DIVISION        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    LLAVEIZQ        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    PARENIZQ        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    CARACTER        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    LLAVEDER        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    $end            reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    PARENDER        reduce using rule 8 (expression2 -> expression DIVISION expression .)
-    SUPER           shift and go to state 14
-    SUB             shift and go to state 17
+    DIVISION        reduce using rule 9 (factor3 -> SUPER factor .)
+    $end            reduce using rule 9 (factor3 -> SUPER factor .)
+    PARENDER        reduce using rule 9 (factor3 -> SUPER factor .)
+    PARENIZQ        reduce using rule 9 (factor3 -> SUPER factor .)
+    CARACTER        reduce using rule 9 (factor3 -> SUPER factor .)
 
-  ! DIVISION        [ shift and go to state 16 ]
-  ! LLAVEIZQ        [ shift and go to state 5 ]
-  ! PARENIZQ        [ shift and go to state 2 ]
-  ! CARACTER        [ shift and go to state 4 ]
-
-    expression2                    shift and go to state 15
-    expression                     shift and go to state 18
 
 state 28
 
-    (4) expression2 -> expression SUB expression .
-    (10) expression2 -> expression SUB expression . SUPER expression
+    (7) factor2 -> SUB factor .
 
-    DIVISION        reduce using rule 4 (expression2 -> expression SUB expression .)
-    LLAVEIZQ        reduce using rule 4 (expression2 -> expression SUB expression .)
-    PARENIZQ        reduce using rule 4 (expression2 -> expression SUB expression .)
-    CARACTER        reduce using rule 4 (expression2 -> expression SUB expression .)
-    LLAVEDER        reduce using rule 4 (expression2 -> expression SUB expression .)
-    $end            reduce using rule 4 (expression2 -> expression SUB expression .)
-    PARENDER        reduce using rule 4 (expression2 -> expression SUB expression .)
-    SUPER           shift and go to state 30
+    DIVISION        reduce using rule 7 (factor2 -> SUB factor .)
+    $end            reduce using rule 7 (factor2 -> SUB factor .)
+    PARENDER        reduce using rule 7 (factor2 -> SUB factor .)
+    PARENIZQ        reduce using rule 7 (factor2 -> SUB factor .)
+    CARACTER        reduce using rule 7 (factor2 -> SUB factor .)
 
-
-state 29
-
-    (9) expression2 -> expression SUPER expression SUB . expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
-
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
-
-    expression                     shift and go to state 31
-
-state 30
-
-    (10) expression2 -> expression SUB expression SUPER . expression
-    (11) expression -> . LLAVEIZQ expression2 LLAVEDER
-    (12) expression -> . LLAVEIZQ expression LLAVEDER
-    (13) expression -> . PARENIZQ expression2 PARENDER
-    (14) expression -> . PARENIZQ expression PARENDER
-    (19) expression -> . CARACTER
-
-    LLAVEIZQ        shift and go to state 5
-    PARENIZQ        shift and go to state 2
-    CARACTER        shift and go to state 4
-
-    expression                     shift and go to state 32
-
-state 31
-
-    (9) expression2 -> expression SUPER expression SUB expression .
-
-    DIVISION        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    LLAVEIZQ        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    PARENIZQ        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    CARACTER        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    LLAVEDER        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    $end            reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-    PARENDER        reduce using rule 9 (expression2 -> expression SUPER expression SUB expression .)
-
-
-state 32
-
-    (10) expression2 -> expression SUB expression SUPER expression .
-
-    DIVISION        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    LLAVEIZQ        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    PARENIZQ        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    CARACTER        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    LLAVEDER        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    $end            reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-    PARENDER        reduce using rule 10 (expression2 -> expression SUB expression SUPER expression .)
-
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: shift/reduce conflict for DIVISION in state 7 resolved as shift
-WARNING: shift/reduce conflict for LLAVEIZQ in state 7 resolved as shift
-WARNING: shift/reduce conflict for PARENIZQ in state 7 resolved as shift
-WARNING: shift/reduce conflict for CARACTER in state 7 resolved as shift
-WARNING: shift/reduce conflict for DIVISION in state 9 resolved as shift
-WARNING: shift/reduce conflict for LLAVEIZQ in state 9 resolved as shift
-WARNING: shift/reduce conflict for PARENIZQ in state 9 resolved as shift
-WARNING: shift/reduce conflict for CARACTER in state 9 resolved as shift
-WARNING: shift/reduce conflict for DIVISION in state 15 resolved as shift
-WARNING: shift/reduce conflict for LLAVEIZQ in state 15 resolved as shift
-WARNING: shift/reduce conflict for PARENIZQ in state 15 resolved as shift
-WARNING: shift/reduce conflict for CARACTER in state 15 resolved as shift
-WARNING: shift/reduce conflict for DIVISION in state 18 resolved as shift
-WARNING: shift/reduce conflict for LLAVEIZQ in state 18 resolved as shift
-WARNING: shift/reduce conflict for PARENIZQ in state 18 resolved as shift
-WARNING: shift/reduce conflict for CARACTER in state 18 resolved as shift

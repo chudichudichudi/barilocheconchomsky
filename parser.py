@@ -13,9 +13,9 @@ tokens = (
 # Tokens
 
 t_CARACTER     = r'[^\_\^\(\)\{\}\/]'
-t_DIVISION     = r'/'
-t_SUB    = r'\_'
-t_SUPER  = r'\^'
+t_DIVISION     = r'\/'
+t_SUB          = r'\_'
+t_SUPER        = r'\^'
 t_PARENDER     = r'\)'
 t_PARENIZQ     = r'\('
 t_LLAVEDER     = r'\}'
@@ -42,50 +42,90 @@ precedence = (
 # dictionary of names
 names = { }
 
+
 def p_statement_expr(t):
-    '''statement : expression
-                 | expression2'''
-    print(t[1])
+    '''statement : div'''
+    out = open('output.svg', 'w')
+    out.write('''<?xml version="1.0" standalone="no"?>
+        <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <g transform="translate(0, 200) scale(200)" font-family="Courier">
+    ''')
+    out.write(t[1])
+    out.write('''
+        </g>
+    </svg>
+    ''')
+    out.close()
 
-def p_expression_binop(t):
-    '''expression2 : expression SUPER expression
-                  | expression SUB expression
-                  | expression2 DIVISION expression2
-                  | expression2 DIVISION expression
-                  | expression DIVISION expression2
-                  | expression DIVISION expression
+def p_term(t):
+    '''term : factor factor1
     '''
-    if   t[2] == '^': t[0] = "{%s ^ %s}" % (t[1], t[3])
-    elif t[2] == '_': t[0] = "{%s _ %s}" % (t[1], t[3])
-    elif t[2] == '/': t[0] = "{%s / %s}" % (t[1], t[3])
+    t[0] = "%s%s" % (t[1], t[2])
 
-def p_expression_terop(t):
-    '''expression2 : expression SUPER expression SUB expression
-                   | expression SUB expression SUPER expression'''
-    if   t[2] == '^' and t[4] == '_': t[0] = "{%s ^ %s _ %s}" % (t[1], t[3], t[5])
-    elif t[2] == '_' and t[4] == '^': t[0] = "{%s _ %s ^ %s}" % (t[1], t[3], t[5])
+def p_factor1(t):
+    '''factor1 : lambda
+               | SUPER factor factor2
+               | SUB factor factor3
+    '''
+    if t[1] != 'lambda':
+        t[0] = ' %s %s%s' % (t[1], t[2], t[3])
+    else:
+        t[0] = ''
 
-def p_expression_group(t):
-    '''expression : LLAVEIZQ expression2 LLAVEDER
-                  | LLAVEIZQ expression LLAVEDER
-                  | PARENIZQ expression2 PARENDER
-                  | PARENIZQ expression PARENDER'''
-    if   t[1] == '(': t[0] = '(%s)' % t[2]
-    elif t[1] == '{': t[0] = '{%s}' % t[2]
+def p_factor2(t):
+    '''factor2 : lambda
+               | SUB factor
+       factor3 : lambda
+               | SUPER factor
+    '''
+    if t[1] != 'lambda':
+        t[0] = ' %s %s' % (t[1], t[2])
+    else:
+        t[0] = ''
 
-def p_expression_concat(t):
-    '''expression2 : expression2 expression2
-                   | expression expression2
-                   | expression2 expression
-                   | expression expression'''
-    t[0] = '{%s %s}' % (t[1], t[2])
+def p_expression(t):
+    '''expression : term1 term
+    '''
+    t[0] = "%s%s" % (t[1], t[2])
+
+def p_term1(t):
+    '''term1 : lambda
+            | term1 term
+    '''
+    if t[1] != 'lambda':
+        t[0] = ' %s%s' % (t[1], t[2])
+    else:
+        t[0] = ''
+
+def p_div(t):
+    '''div : div1 expression
+    '''
+    t[0] = "%s%s" % (t[1], t[2])
+
+def p_div1(t):
+    '''div1 : lambda
+            | div1 expression DIVISION
+    '''
+    if t[1] != 'lambda':
+        t[0] = ' %s%s /' % (t[1], t[2])
+    else:
+        t[0] = ''
+
+def p_group(t):
+    '''factor : PARENIZQ div PARENDER'''
+    t[0] = '%s' % t[2]
 
 def p_expression_caracter(t):
-    'expression : CARACTER'
+    'factor : CARACTER'
     t[0] = t[1]
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
+
+def p_lambda(t):
+    'lambda :'
+    t[0] = 'lambda'
 
 import ply.yacc as yacc
 parser = yacc.yacc()
