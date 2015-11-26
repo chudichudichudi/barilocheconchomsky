@@ -75,11 +75,12 @@ class Nodo(object):
     def dividir(self, nodo):
         ancho = max(self.ancho, nodo.ancho,) + 10
         ancho2 = ancho / 4
+
         return Nodo('''
         <g transform="translate(%s, 0)">
             %s
         </g>    
-        <line x1="0" y1="0.72" x2="%s" y2=".72" stroke-width="0.03" stroke="black"/>
+        <line x1="0" y1=".72" x2="%s" y2=".72" stroke-width="0.03" stroke="black"/>
         <g transform="translate(%s, %s)">
             %s
         </g>
@@ -241,9 +242,5 @@ def p_lambda(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-while True:
-    try:
-        s = input('calc > ')   # Use raw_input on Python 2
-    except EOFError:
-        break
-    parser.parse(s)
+import sys
+parser.parse(str(sys.argv[1]))
