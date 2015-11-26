@@ -33,15 +33,14 @@ class Nodo(object):
             </g>
         ''' % (self.texto, self.ancho, nodo.texto),
         self.ancho + nodo.ancho,
-        self.alto + nodo.alto)
+        max(self.alto, nodo.alto))
 
     def superponer(self, nodo):
         return Nodo('''
-        %s
-        %s
+        %s %s
         ''' % (self.texto, nodo.texto),
         max(self.ancho, nodo.ancho),
-        self.ancho + nodo.alto)
+        max(self.alto, nodo.alto))
 
     def subir(self):
         nodo = self.a_indice()
@@ -51,7 +50,7 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto)
+        self.alto * 1.3)
 
     def bajar(self):
         nodo = self.a_indice()
@@ -61,7 +60,7 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto)
+        self.alto * 1.3)
 
     def a_indice(self):
         return Nodo('''
@@ -73,37 +72,55 @@ class Nodo(object):
         self.alto * 0.7)
 
     def dividir(self, nodo):
-        ancho = max(self.ancho, nodo.ancho,) + 10
-        ancho2 = ancho / 4
+        ancho_barra = max(self.ancho, nodo.ancho)
+        offset_x_arriba = ( ancho_barra - self.ancho ) / 2
+        offset_x_abajo = ( ancho_barra - nodo.ancho ) / 2
 
         return Nodo('''
-        <g transform="translate(%s, 0)">
-            %s
-        </g>    
-        <line x1="0" y1=".72" x2="%s" y2=".72" stroke-width="0.03" stroke="black"/>
-        <g transform="translate(%s, %s)">
-            %s
-        </g>
-        ''' % (ancho2, self.texto, ancho, ancho2, self.alto + 7, nodo.texto),
-        ancho,
+            <g transform="translate(0, -%s)">
+                <g transform="translate(%s, -%s)">
+                    %s
+                </g>    
+                <line  y1=".72" x2="%s" y2=".72" stroke-width="0.07" stroke="black"/>
+                <g transform="translate(%s, %s)">
+                    %s
+                </g>
+            </g>
+        
+        ''' % (self.alto,
+                offset_x_arriba,
+               0,
+               self.texto, 
+               ancho_barra,
+               offset_x_abajo, 
+               nodo.alto,
+               nodo.texto),
+        ancho_barra,
         self.alto + nodo.alto + 7)
 
     def parentizar(self):
-        print(self.alto)
         return Nodo('''
-        <g transform="translate(0,0) scale(1, %s)">
-            <text>(</text>
+        <g transform="translate(0, %s)">
+            <g transform="scale(1, %s)">
+                <text>(</text>
+            </g>
+            <g transform="translate(%s)">
+                %s
+            </g>
+            
+            <g transform="translate(%s,0) scale(1, %s)">
+                <text>)</text>
+            </g>
         </g>
-        <g transform="translate(6, 0)">
-            %s
-        </g>
-        
-        <g transform="translate(%s,0) scale(1, %s)">
-            <text>)</text>
-        </g>
-        ''' % (self.alto / 10, self.texto, self.ancho, self.alto / 10),
-        self.ancho + 120,
-        self.alto )
+        ''' % (self.alto / 4, 
+               self.alto / 10,
+               6, 
+               self.texto, 
+               self.ancho + 6 , #adelanto el texto un ancho del parentesis 
+               self.alto / 10),
+
+               self.ancho + 12 , #adelando el ancho con 12 por los parentesis
+               self.alto )
 
 tokens = (
     'CARACTER', 'DIVISION', 'SUB', 'SUPER', 'PARENIZQ', 'PARENDER',
@@ -209,19 +226,23 @@ def p_div(t):
     '''
     # mirar si es division div1, si lo es mover abajo y centrar en el ancho de expression
     if t[1].division:
+        print("div1 divide")
         t[0] = t[1].dividir(t[2])
     else:
-        t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
+        print("div1 no divide")
+        t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
 
 def p_div1(t):
     '''div1 : lambda
             | div1 expression DIVISION
     '''
     if t[1] != LAMBDA:
+        print("div1 expression DIVISION")
         #t[0] = Nodo(' %s%s /' % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
-        t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho))
+        t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
         t[0].division = True
     else:
+        print("lambda")
         t[0] = Nodo('')
 
 def p_group(t):
