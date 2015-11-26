@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # parser.py
 #
-# A simple calculator with variables -- all in one file.
+# Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
 LAMBDA = ''
 
@@ -9,6 +9,7 @@ class Nodo(object):
     texto = None
     ancho = None
     alto = None
+    division = False
 
     def __init__(self, texto='', ancho=0, alto=0):
         self.texto = texto
@@ -71,6 +72,37 @@ class Nodo(object):
         self.ancho * 0.7,
         self.alto * 0.7)
 
+    def dividir(self, nodo):
+        ancho = max(self.ancho, nodo.ancho,) + 10
+        ancho2 = ancho / 4
+        return Nodo('''
+        <g transform="translate(%s, 0)">
+            %s
+        </g>    
+        <line x1="0" y1="0.72" x2="%s" y2=".72" stroke-width="0.03" stroke="black"/>
+        <g transform="translate(%s, %s)">
+            %s
+        </g>
+        ''' % (ancho2, self.texto, ancho, ancho2, self.alto + 7, nodo.texto),
+        ancho,
+        self.alto + nodo.alto + 7)
+
+    def parentizar(self):
+        print(self.alto)
+        return Nodo('''
+        <g transform="translate(0,0) scale(1, %s)">
+            <text>(</text>
+        </g>
+        <g transform="translate(6, 0)">
+            %s
+        </g>
+        
+        <g transform="translate(%s,0) scale(1, %s)">
+            <text>)</text>
+        </g>
+        ''' % (self.alto / 10, self.texto, self.ancho, self.alto / 10),
+        self.ancho + 120,
+        self.alto )
 
 tokens = (
     'CARACTER', 'DIVISION', 'SUB', 'SUPER', 'PARENIZQ', 'PARENDER',
@@ -174,20 +206,26 @@ def p_term1(t):
 def p_div(t):
     '''div : div1 expression
     '''
-    t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
+    # mirar si es division div1, si lo es mover abajo y centrar en el ancho de expression
+    if t[1].division:
+        t[0] = t[1].dividir(t[2])
+    else:
+        t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
 
 def p_div1(t):
     '''div1 : lambda
             | div1 expression DIVISION
     '''
     if t[1] != LAMBDA:
-        t[0] = Nodo(' %s%s /' % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
+        #t[0] = Nodo(' %s%s /' % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
+        t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho))
+        t[0].division = True
     else:
         t[0] = Nodo('')
 
 def p_group(t):
     '''factor : PARENIZQ div PARENDER'''
-    t[0] = t[2]
+    t[0] = t[2].parentizar()
 
 def p_expression_caracter(t):
     'factor : CARACTER'
