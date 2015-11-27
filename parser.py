@@ -76,51 +76,46 @@ class Nodo(object):
         offset_x_arriba = ( ancho_barra - self.ancho ) / 2
         offset_x_abajo = ( ancho_barra - nodo.ancho ) / 2
 
+        print(self.alto)
         return Nodo('''
-            <g transform="translate(0, -%s)">
-                <g transform="translate(%s, -%s)">
+
+                <g transform="translate(%s, 0)">
                     %s
                 </g>    
                 <line  y1=".72" x2="%s" y2=".72" stroke-width="0.07" stroke="black"/>
                 <g transform="translate(%s, %s)">
                     %s
                 </g>
-            </g>
         
-        ''' % (self.alto,
-                offset_x_arriba,
-               0,
+        ''' % (
+               offset_x_arriba,
                self.texto, 
                ancho_barra,
-               offset_x_abajo, 
+               offset_x_abajo,
                nodo.alto,
                nodo.texto),
         ancho_barra,
-        self.alto + nodo.alto + 7)
+        self.alto + nodo.alto)
 
     def parentizar(self):
         return Nodo('''
-        <g transform="translate(0, %s)">
             <g transform="scale(1, %s)">
                 <text>(</text>
             </g>
-            <g transform="translate(%s)">
+            <g transform="translate(%s, -%s)">
                 %s
             </g>
-            
             <g transform="translate(%s,0) scale(1, %s)">
                 <text>)</text>
             </g>
-        </g>
-        ''' % (self.alto / 4, 
-               self.alto / 10,
+        ''' % (self.alto / 10,
                6, 
+               self.alto / 2, 
                self.texto, 
-               self.ancho + 6 , #adelanto el texto un ancho del parentesis 
+               self.ancho + 6, #adelanto el texto un ancho del parentesis 
                self.alto / 10),
-
                self.ancho + 12 , #adelando el ancho con 12 por los parentesis
-               self.alto )
+               self.alto * (self.alto / 10) )
 
 tokens = (
     'CARACTER', 'DIVISION', 'SUB', 'SUPER', 'PARENIZQ', 'PARENDER',
@@ -226,10 +221,8 @@ def p_div(t):
     '''
     # mirar si es division div1, si lo es mover abajo y centrar en el ancho de expression
     if t[1].division:
-        print("div1 divide")
         t[0] = t[1].dividir(t[2])
     else:
-        print("div1 no divide")
         t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
 
 def p_div1(t):
@@ -237,9 +230,11 @@ def p_div1(t):
             | div1 expression DIVISION
     '''
     if t[1] != LAMBDA:
-        print("div1 expression DIVISION")
-        #t[0] = Nodo(' %s%s /' % (t[1], t[2]), max(t[1].ancho, t[2].ancho, 100))
-        t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
+        if t[1].division:
+            t[0] = t[1].dividir(t[2])
+        else:
+            t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
+
         t[0].division = True
     else:
         print("lambda")
