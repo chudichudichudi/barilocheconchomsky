@@ -1,10 +1,5 @@
 Created by PLY version 3.8 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    LLAVEDER
-    LLAVEIZQ
-
 Grammar
 
 Rule 0     S' -> statement
@@ -24,15 +19,16 @@ Rule 13    div -> div1 expression
 Rule 14    div1 -> lambda
 Rule 15    div1 -> div1 expression DIVISION
 Rule 16    factor -> PARENIZQ div PARENDER
-Rule 17    factor -> CARACTER
-Rule 18    lambda -> <empty>
+Rule 17    factor -> LLAVEIZQ div LLAVEDER
+Rule 18    factor -> CARACTER
+Rule 19    lambda -> <empty>
 
 Terminals, with rules where they appear
 
-CARACTER             : 17
+CARACTER             : 18
 DIVISION             : 15
-LLAVEDER             : 
-LLAVEIZQ             : 
+LLAVEDER             : 17
+LLAVEIZQ             : 17
 PARENDER             : 16
 PARENIZQ             : 16
 SUB                  : 5 7
@@ -41,7 +37,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
-div                  : 1 16
+div                  : 1 16 17
 div1                 : 13 15
 expression           : 13 15
 factor               : 2 4 5 7 9
@@ -62,103 +58,100 @@ state 0
     (13) div -> . div1 expression
     (14) div1 -> . lambda
     (15) div1 -> . div1 expression DIVISION
-    (18) lambda -> .
+    (19) lambda -> .
 
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
-    div                            shift and go to state 3
-    div1                           shift and go to state 2
-    statement                      shift and go to state 1
-    lambda                         shift and go to state 4
+    lambda                         shift and go to state 3
+    div1                           shift and go to state 1
+    div                            shift and go to state 4
+    statement                      shift and go to state 2
 
 state 1
-
-    (0) S' -> statement .
-
-
-
-state 2
 
     (13) div -> div1 . expression
     (15) div1 -> div1 . expression DIVISION
     (10) expression -> . term1 term
     (11) term1 -> . lambda
     (12) term1 -> . term1 term
-    (18) lambda -> .
+    (19) lambda -> .
 
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
-    term1                          shift and go to state 5
-    expression                     shift and go to state 6
-    lambda                         shift and go to state 7
+    expression                     shift and go to state 5
+    term1                          shift and go to state 7
+    lambda                         shift and go to state 6
+
+state 2
+
+    (0) S' -> statement .
+
+
 
 state 3
+
+    (14) div1 -> lambda .
+
+    PARENIZQ        reduce using rule 14 (div1 -> lambda .)
+    LLAVEIZQ        reduce using rule 14 (div1 -> lambda .)
+    CARACTER        reduce using rule 14 (div1 -> lambda .)
+
+
+state 4
 
     (1) statement -> div .
 
     $end            reduce using rule 1 (statement -> div .)
 
 
-state 4
-
-    (14) div1 -> lambda .
-
-    PARENIZQ        reduce using rule 14 (div1 -> lambda .)
-    CARACTER        reduce using rule 14 (div1 -> lambda .)
-
-
 state 5
+
+    (13) div -> div1 expression .
+    (15) div1 -> div1 expression . DIVISION
+
+    LLAVEDER        reduce using rule 13 (div -> div1 expression .)
+    $end            reduce using rule 13 (div -> div1 expression .)
+    PARENDER        reduce using rule 13 (div -> div1 expression .)
+    DIVISION        shift and go to state 8
+
+
+state 6
+
+    (11) term1 -> lambda .
+
+    PARENIZQ        reduce using rule 11 (term1 -> lambda .)
+    LLAVEIZQ        reduce using rule 11 (term1 -> lambda .)
+    CARACTER        reduce using rule 11 (term1 -> lambda .)
+
+
+state 7
 
     (10) expression -> term1 . term
     (12) term1 -> term1 . term
     (2) term -> . factor factor1
     (16) factor -> . PARENIZQ div PARENDER
-    (17) factor -> . CARACTER
+    (17) factor -> . LLAVEIZQ div LLAVEDER
+    (18) factor -> . CARACTER
 
     PARENIZQ        shift and go to state 9
+    LLAVEIZQ        shift and go to state 13
     CARACTER        shift and go to state 10
 
-    factor                         shift and go to state 8
     term                           shift and go to state 11
-
-state 6
-
-    (13) div -> div1 expression .
-    (15) div1 -> div1 expression . DIVISION
-
-    PARENDER        reduce using rule 13 (div -> div1 expression .)
-    $end            reduce using rule 13 (div -> div1 expression .)
-    DIVISION        shift and go to state 12
-
-
-state 7
-
-    (11) term1 -> lambda .
-
-    PARENIZQ        reduce using rule 11 (term1 -> lambda .)
-    CARACTER        reduce using rule 11 (term1 -> lambda .)
-
+    factor                         shift and go to state 12
 
 state 8
 
-    (2) term -> factor . factor1
-    (3) factor1 -> . lambda
-    (4) factor1 -> . SUPER factor factor2
-    (5) factor1 -> . SUB factor factor3
-    (18) lambda -> .
+    (15) div1 -> div1 expression DIVISION .
 
-    SUPER           shift and go to state 15
-    SUB             shift and go to state 13
-    DIVISION        reduce using rule 18 (lambda -> .)
-    $end            reduce using rule 18 (lambda -> .)
-    PARENDER        reduce using rule 18 (lambda -> .)
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 15 (div1 -> div1 expression DIVISION .)
+    LLAVEIZQ        reduce using rule 15 (div1 -> div1 expression DIVISION .)
+    CARACTER        reduce using rule 15 (div1 -> div1 expression DIVISION .)
 
-    factor1                        shift and go to state 14
-    lambda                         shift and go to state 16
 
 state 9
 
@@ -166,26 +159,29 @@ state 9
     (13) div -> . div1 expression
     (14) div1 -> . lambda
     (15) div1 -> . div1 expression DIVISION
-    (18) lambda -> .
+    (19) lambda -> .
 
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
-    div1                           shift and go to state 2
-    div                            shift and go to state 17
-    lambda                         shift and go to state 4
+    div1                           shift and go to state 1
+    lambda                         shift and go to state 3
+    div                            shift and go to state 14
 
 state 10
 
-    (17) factor -> CARACTER .
+    (18) factor -> CARACTER .
 
-    DIVISION        reduce using rule 17 (factor -> CARACTER .)
-    $end            reduce using rule 17 (factor -> CARACTER .)
-    PARENDER        reduce using rule 17 (factor -> CARACTER .)
-    PARENIZQ        reduce using rule 17 (factor -> CARACTER .)
-    CARACTER        reduce using rule 17 (factor -> CARACTER .)
-    SUPER           reduce using rule 17 (factor -> CARACTER .)
-    SUB             reduce using rule 17 (factor -> CARACTER .)
+    SUB             reduce using rule 18 (factor -> CARACTER .)
+    DIVISION        reduce using rule 18 (factor -> CARACTER .)
+    $end            reduce using rule 18 (factor -> CARACTER .)
+    PARENDER        reduce using rule 18 (factor -> CARACTER .)
+    LLAVEDER        reduce using rule 18 (factor -> CARACTER .)
+    PARENIZQ        reduce using rule 18 (factor -> CARACTER .)
+    LLAVEIZQ        reduce using rule 18 (factor -> CARACTER .)
+    CARACTER        reduce using rule 18 (factor -> CARACTER .)
+    SUPER           reduce using rule 18 (factor -> CARACTER .)
 
 
 state 11
@@ -196,159 +192,195 @@ state 11
     DIVISION        reduce using rule 10 (expression -> term1 term .)
     $end            reduce using rule 10 (expression -> term1 term .)
     PARENDER        reduce using rule 10 (expression -> term1 term .)
+    LLAVEDER        reduce using rule 10 (expression -> term1 term .)
     PARENIZQ        reduce using rule 12 (term1 -> term1 term .)
+    LLAVEIZQ        reduce using rule 12 (term1 -> term1 term .)
     CARACTER        reduce using rule 12 (term1 -> term1 term .)
 
 
 state 12
 
-    (15) div1 -> div1 expression DIVISION .
+    (2) term -> factor . factor1
+    (3) factor1 -> . lambda
+    (4) factor1 -> . SUPER factor factor2
+    (5) factor1 -> . SUB factor factor3
+    (19) lambda -> .
 
-    PARENIZQ        reduce using rule 15 (div1 -> div1 expression DIVISION .)
-    CARACTER        reduce using rule 15 (div1 -> div1 expression DIVISION .)
+    SUPER           shift and go to state 16
+    SUB             shift and go to state 18
+    DIVISION        reduce using rule 19 (lambda -> .)
+    $end            reduce using rule 19 (lambda -> .)
+    PARENDER        reduce using rule 19 (lambda -> .)
+    LLAVEDER        reduce using rule 19 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
+    factor1                        shift and go to state 17
+    lambda                         shift and go to state 15
 
 state 13
 
-    (5) factor1 -> SUB . factor factor3
-    (16) factor -> . PARENIZQ div PARENDER
-    (17) factor -> . CARACTER
+    (17) factor -> LLAVEIZQ . div LLAVEDER
+    (13) div -> . div1 expression
+    (14) div1 -> . lambda
+    (15) div1 -> . div1 expression DIVISION
+    (19) lambda -> .
 
-    PARENIZQ        shift and go to state 9
-    CARACTER        shift and go to state 10
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
-    factor                         shift and go to state 18
+    div1                           shift and go to state 1
+    lambda                         shift and go to state 3
+    div                            shift and go to state 19
 
 state 14
-
-    (2) term -> factor factor1 .
-
-    DIVISION        reduce using rule 2 (term -> factor factor1 .)
-    $end            reduce using rule 2 (term -> factor factor1 .)
-    PARENDER        reduce using rule 2 (term -> factor factor1 .)
-    PARENIZQ        reduce using rule 2 (term -> factor factor1 .)
-    CARACTER        reduce using rule 2 (term -> factor factor1 .)
-
-
-state 15
-
-    (4) factor1 -> SUPER . factor factor2
-    (16) factor -> . PARENIZQ div PARENDER
-    (17) factor -> . CARACTER
-
-    PARENIZQ        shift and go to state 9
-    CARACTER        shift and go to state 10
-
-    factor                         shift and go to state 19
-
-state 16
-
-    (3) factor1 -> lambda .
-
-    DIVISION        reduce using rule 3 (factor1 -> lambda .)
-    $end            reduce using rule 3 (factor1 -> lambda .)
-    PARENDER        reduce using rule 3 (factor1 -> lambda .)
-    PARENIZQ        reduce using rule 3 (factor1 -> lambda .)
-    CARACTER        reduce using rule 3 (factor1 -> lambda .)
-
-
-state 17
 
     (16) factor -> PARENIZQ div . PARENDER
 
     PARENDER        shift and go to state 20
 
 
+state 15
+
+    (3) factor1 -> lambda .
+
+    DIVISION        reduce using rule 3 (factor1 -> lambda .)
+    $end            reduce using rule 3 (factor1 -> lambda .)
+    PARENDER        reduce using rule 3 (factor1 -> lambda .)
+    LLAVEDER        reduce using rule 3 (factor1 -> lambda .)
+    PARENIZQ        reduce using rule 3 (factor1 -> lambda .)
+    LLAVEIZQ        reduce using rule 3 (factor1 -> lambda .)
+    CARACTER        reduce using rule 3 (factor1 -> lambda .)
+
+
+state 16
+
+    (4) factor1 -> SUPER . factor factor2
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . LLAVEIZQ div LLAVEDER
+    (18) factor -> . CARACTER
+
+    PARENIZQ        shift and go to state 9
+    LLAVEIZQ        shift and go to state 13
+    CARACTER        shift and go to state 10
+
+    factor                         shift and go to state 21
+
+state 17
+
+    (2) term -> factor factor1 .
+
+    DIVISION        reduce using rule 2 (term -> factor factor1 .)
+    $end            reduce using rule 2 (term -> factor factor1 .)
+    PARENDER        reduce using rule 2 (term -> factor factor1 .)
+    LLAVEDER        reduce using rule 2 (term -> factor factor1 .)
+    PARENIZQ        reduce using rule 2 (term -> factor factor1 .)
+    LLAVEIZQ        reduce using rule 2 (term -> factor factor1 .)
+    CARACTER        reduce using rule 2 (term -> factor factor1 .)
+
+
 state 18
 
-    (5) factor1 -> SUB factor . factor3
-    (8) factor3 -> . lambda
-    (9) factor3 -> . SUPER factor
-    (18) lambda -> .
+    (5) factor1 -> SUB . factor factor3
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . LLAVEIZQ div LLAVEDER
+    (18) factor -> . CARACTER
 
-    SUPER           shift and go to state 21
-    DIVISION        reduce using rule 18 (lambda -> .)
-    $end            reduce using rule 18 (lambda -> .)
-    PARENDER        reduce using rule 18 (lambda -> .)
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    PARENIZQ        shift and go to state 9
+    LLAVEIZQ        shift and go to state 13
+    CARACTER        shift and go to state 10
 
-    factor3                        shift and go to state 22
-    lambda                         shift and go to state 23
+    factor                         shift and go to state 22
 
 state 19
 
-    (4) factor1 -> SUPER factor . factor2
-    (6) factor2 -> . lambda
-    (7) factor2 -> . SUB factor
-    (18) lambda -> .
+    (17) factor -> LLAVEIZQ div . LLAVEDER
 
-    SUB             shift and go to state 24
-    DIVISION        reduce using rule 18 (lambda -> .)
-    $end            reduce using rule 18 (lambda -> .)
-    PARENDER        reduce using rule 18 (lambda -> .)
-    PARENIZQ        reduce using rule 18 (lambda -> .)
-    CARACTER        reduce using rule 18 (lambda -> .)
+    LLAVEDER        shift and go to state 23
 
-    factor2                        shift and go to state 25
-    lambda                         shift and go to state 26
 
 state 20
 
     (16) factor -> PARENIZQ div PARENDER .
 
+    SUB             reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     DIVISION        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     $end            reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     PARENDER        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    LLAVEDER        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     PARENIZQ        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
+    LLAVEIZQ        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     CARACTER        reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
     SUPER           reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
-    SUB             reduce using rule 16 (factor -> PARENIZQ div PARENDER .)
 
 
 state 21
 
-    (9) factor3 -> SUPER . factor
-    (16) factor -> . PARENIZQ div PARENDER
-    (17) factor -> . CARACTER
+    (4) factor1 -> SUPER factor . factor2
+    (6) factor2 -> . lambda
+    (7) factor2 -> . SUB factor
+    (19) lambda -> .
 
-    PARENIZQ        shift and go to state 9
-    CARACTER        shift and go to state 10
+    SUB             shift and go to state 24
+    DIVISION        reduce using rule 19 (lambda -> .)
+    $end            reduce using rule 19 (lambda -> .)
+    PARENDER        reduce using rule 19 (lambda -> .)
+    LLAVEDER        reduce using rule 19 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
-    factor                         shift and go to state 27
+    factor2                        shift and go to state 25
+    lambda                         shift and go to state 26
 
 state 22
 
-    (5) factor1 -> SUB factor factor3 .
+    (5) factor1 -> SUB factor . factor3
+    (8) factor3 -> . lambda
+    (9) factor3 -> . SUPER factor
+    (19) lambda -> .
 
-    DIVISION        reduce using rule 5 (factor1 -> SUB factor factor3 .)
-    $end            reduce using rule 5 (factor1 -> SUB factor factor3 .)
-    PARENDER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
-    PARENIZQ        reduce using rule 5 (factor1 -> SUB factor factor3 .)
-    CARACTER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    SUPER           shift and go to state 28
+    DIVISION        reduce using rule 19 (lambda -> .)
+    $end            reduce using rule 19 (lambda -> .)
+    PARENDER        reduce using rule 19 (lambda -> .)
+    LLAVEDER        reduce using rule 19 (lambda -> .)
+    PARENIZQ        reduce using rule 19 (lambda -> .)
+    LLAVEIZQ        reduce using rule 19 (lambda -> .)
+    CARACTER        reduce using rule 19 (lambda -> .)
 
+    factor3                        shift and go to state 27
+    lambda                         shift and go to state 29
 
 state 23
 
-    (8) factor3 -> lambda .
+    (17) factor -> LLAVEIZQ div LLAVEDER .
 
-    DIVISION        reduce using rule 8 (factor3 -> lambda .)
-    $end            reduce using rule 8 (factor3 -> lambda .)
-    PARENDER        reduce using rule 8 (factor3 -> lambda .)
-    PARENIZQ        reduce using rule 8 (factor3 -> lambda .)
-    CARACTER        reduce using rule 8 (factor3 -> lambda .)
+    SUB             reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    DIVISION        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    $end            reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    PARENDER        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    LLAVEDER        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    PARENIZQ        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    LLAVEIZQ        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    CARACTER        reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
+    SUPER           reduce using rule 17 (factor -> LLAVEIZQ div LLAVEDER .)
 
 
 state 24
 
     (7) factor2 -> SUB . factor
     (16) factor -> . PARENIZQ div PARENDER
-    (17) factor -> . CARACTER
+    (17) factor -> . LLAVEIZQ div LLAVEDER
+    (18) factor -> . CARACTER
 
     PARENIZQ        shift and go to state 9
+    LLAVEIZQ        shift and go to state 13
     CARACTER        shift and go to state 10
 
-    factor                         shift and go to state 28
+    factor                         shift and go to state 30
 
 state 25
 
@@ -357,7 +389,9 @@ state 25
     DIVISION        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
     $end            reduce using rule 4 (factor1 -> SUPER factor factor2 .)
     PARENDER        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    LLAVEDER        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
     PARENIZQ        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
+    LLAVEIZQ        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
     CARACTER        reduce using rule 4 (factor1 -> SUPER factor factor2 .)
 
 
@@ -368,28 +402,73 @@ state 26
     DIVISION        reduce using rule 6 (factor2 -> lambda .)
     $end            reduce using rule 6 (factor2 -> lambda .)
     PARENDER        reduce using rule 6 (factor2 -> lambda .)
+    LLAVEDER        reduce using rule 6 (factor2 -> lambda .)
     PARENIZQ        reduce using rule 6 (factor2 -> lambda .)
+    LLAVEIZQ        reduce using rule 6 (factor2 -> lambda .)
     CARACTER        reduce using rule 6 (factor2 -> lambda .)
 
 
 state 27
 
-    (9) factor3 -> SUPER factor .
+    (5) factor1 -> SUB factor factor3 .
 
-    DIVISION        reduce using rule 9 (factor3 -> SUPER factor .)
-    $end            reduce using rule 9 (factor3 -> SUPER factor .)
-    PARENDER        reduce using rule 9 (factor3 -> SUPER factor .)
-    PARENIZQ        reduce using rule 9 (factor3 -> SUPER factor .)
-    CARACTER        reduce using rule 9 (factor3 -> SUPER factor .)
+    DIVISION        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    $end            reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    PARENDER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    LLAVEDER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    PARENIZQ        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    LLAVEIZQ        reduce using rule 5 (factor1 -> SUB factor factor3 .)
+    CARACTER        reduce using rule 5 (factor1 -> SUB factor factor3 .)
 
 
 state 28
+
+    (9) factor3 -> SUPER . factor
+    (16) factor -> . PARENIZQ div PARENDER
+    (17) factor -> . LLAVEIZQ div LLAVEDER
+    (18) factor -> . CARACTER
+
+    PARENIZQ        shift and go to state 9
+    LLAVEIZQ        shift and go to state 13
+    CARACTER        shift and go to state 10
+
+    factor                         shift and go to state 31
+
+state 29
+
+    (8) factor3 -> lambda .
+
+    DIVISION        reduce using rule 8 (factor3 -> lambda .)
+    $end            reduce using rule 8 (factor3 -> lambda .)
+    PARENDER        reduce using rule 8 (factor3 -> lambda .)
+    LLAVEDER        reduce using rule 8 (factor3 -> lambda .)
+    PARENIZQ        reduce using rule 8 (factor3 -> lambda .)
+    LLAVEIZQ        reduce using rule 8 (factor3 -> lambda .)
+    CARACTER        reduce using rule 8 (factor3 -> lambda .)
+
+
+state 30
 
     (7) factor2 -> SUB factor .
 
     DIVISION        reduce using rule 7 (factor2 -> SUB factor .)
     $end            reduce using rule 7 (factor2 -> SUB factor .)
     PARENDER        reduce using rule 7 (factor2 -> SUB factor .)
+    LLAVEDER        reduce using rule 7 (factor2 -> SUB factor .)
     PARENIZQ        reduce using rule 7 (factor2 -> SUB factor .)
+    LLAVEIZQ        reduce using rule 7 (factor2 -> SUB factor .)
     CARACTER        reduce using rule 7 (factor2 -> SUB factor .)
+
+
+state 31
+
+    (9) factor3 -> SUPER factor .
+
+    DIVISION        reduce using rule 9 (factor3 -> SUPER factor .)
+    $end            reduce using rule 9 (factor3 -> SUPER factor .)
+    PARENDER        reduce using rule 9 (factor3 -> SUPER factor .)
+    LLAVEDER        reduce using rule 9 (factor3 -> SUPER factor .)
+    PARENIZQ        reduce using rule 9 (factor3 -> SUPER factor .)
+    LLAVEIZQ        reduce using rule 9 (factor3 -> SUPER factor .)
+    CARACTER        reduce using rule 9 (factor3 -> SUPER factor .)
 

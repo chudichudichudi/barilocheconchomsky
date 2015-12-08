@@ -5,9 +5,9 @@ _tabversion = '3.8'
 
 _lr_method = 'LALR'
 
-_lr_signature = '148CCBEC99334893E786B400FB5B4FAD'
+_lr_signature = '1760C64296C978EDF474B351352B54CB'
     
-_lr_action_items = {'$end':([1,3,6,8,10,11,14,16,18,19,20,22,23,25,26,27,28,],[0,-1,-13,-18,-17,-10,-2,-3,-18,-18,-16,-5,-8,-4,-6,-9,-7,]),'SUB':([8,10,19,20,],[13,-17,24,-16,]),'PARENIZQ':([0,2,4,5,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,],[-18,-18,-14,9,-11,-18,-18,-17,-12,-15,9,-2,9,-3,-18,-18,-16,9,-5,-8,9,-4,-6,-9,-7,]),'DIVISION':([6,8,10,11,14,16,18,19,20,22,23,25,26,27,28,],[12,-18,-17,-10,-2,-3,-18,-18,-16,-5,-8,-4,-6,-9,-7,]),'PARENDER':([6,8,10,11,14,16,17,18,19,20,22,23,25,26,27,28,],[-13,-18,-17,-10,-2,-3,20,-18,-18,-16,-5,-8,-4,-6,-9,-7,]),'SUPER':([8,10,18,20,],[15,-17,21,-16,]),'CARACTER':([0,2,4,5,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,24,25,26,27,28,],[-18,-18,-14,10,-11,-18,-18,-17,-12,-15,10,-2,10,-3,-18,-18,-16,10,-5,-8,10,-4,-6,-9,-7,]),}
+_lr_action_items = {'LLAVEDER':([5,10,11,12,15,17,19,20,21,22,23,25,26,27,29,30,31,],[-13,-18,-10,-19,-3,-2,23,-16,-19,-19,-17,-4,-6,-5,-8,-7,-9,]),'PARENIZQ':([0,1,3,6,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,],[-19,-19,-14,-11,9,-15,-19,-18,-12,-19,-19,-3,9,-2,9,-16,-19,-19,-17,9,-4,-6,-5,9,-8,-7,-9,]),'CARACTER':([0,1,3,6,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,],[-19,-19,-14,-11,10,-15,-19,-18,-12,-19,-19,-3,10,-2,10,-16,-19,-19,-17,10,-4,-6,-5,10,-8,-7,-9,]),'$end':([2,4,5,10,11,12,15,17,20,21,22,23,25,26,27,29,30,31,],[0,-1,-13,-18,-10,-19,-3,-2,-16,-19,-19,-17,-4,-6,-5,-8,-7,-9,]),'SUB':([10,12,20,21,23,],[-18,18,-16,24,-17,]),'LLAVEIZQ':([0,1,3,6,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,],[-19,-19,-14,-11,13,-15,-19,-18,-12,-19,-19,-3,13,-2,13,-16,-19,-19,-17,13,-4,-6,-5,13,-8,-7,-9,]),'PARENDER':([5,10,11,12,14,15,17,20,21,22,23,25,26,27,29,30,31,],[-13,-18,-10,-19,20,-3,-2,-16,-19,-19,-17,-4,-6,-5,-8,-7,-9,]),'SUPER':([10,12,20,22,23,],[-18,16,-16,28,-17,]),'DIVISION':([5,10,11,12,15,17,20,21,22,23,25,26,27,29,30,31,],[8,-18,-10,-19,-3,-2,-16,-19,-19,-17,-4,-6,-5,-8,-7,-9,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'factor3':([18,],[22,]),'term1':([2,],[5,]),'statement':([0,],[1,]),'term':([5,],[11,]),'factor1':([8,],[14,]),'div1':([0,9,],[2,2,]),'div':([0,9,],[3,17,]),'factor2':([19,],[25,]),'expression':([2,],[6,]),'factor':([5,13,15,21,24,],[8,18,19,27,28,]),'lambda':([0,2,8,9,18,19,],[4,7,16,4,23,26,]),}
+_lr_goto_items = {'div1':([0,9,13,],[1,1,1,]),'expression':([1,],[5,]),'term':([7,],[11,]),'statement':([0,],[2,]),'lambda':([0,1,9,12,13,21,22,],[3,6,3,15,3,26,29,]),'factor':([7,16,18,24,28,],[12,21,22,30,31,]),'factor2':([21,],[25,]),'term1':([1,],[7,]),'factor1':([12,],[17,]),'div':([0,9,13,],[4,14,19,]),'factor3':([22,],[27,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,22 +26,23 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> statement","S'",1,None,None,None),
-  ('statement -> div','statement',1,'p_statement_expr','parser.py',47),
-  ('term -> factor factor1','term',2,'p_term','parser.py',63),
-  ('factor1 -> lambda','factor1',1,'p_factor1','parser.py',68),
-  ('factor1 -> SUPER factor factor2','factor1',3,'p_factor1','parser.py',69),
-  ('factor1 -> SUB factor factor3','factor1',3,'p_factor1','parser.py',70),
-  ('factor2 -> lambda','factor2',1,'p_factor2','parser.py',78),
-  ('factor2 -> SUB factor','factor2',2,'p_factor2','parser.py',79),
-  ('factor3 -> lambda','factor3',1,'p_factor2','parser.py',80),
-  ('factor3 -> SUPER factor','factor3',2,'p_factor2','parser.py',81),
-  ('expression -> term1 term','expression',2,'p_expression','parser.py',89),
-  ('term1 -> lambda','term1',1,'p_term1','parser.py',94),
-  ('term1 -> term1 term','term1',2,'p_term1','parser.py',95),
-  ('div -> div1 expression','div',2,'p_div','parser.py',103),
-  ('div1 -> lambda','div1',1,'p_div1','parser.py',108),
-  ('div1 -> div1 expression DIVISION','div1',3,'p_div1','parser.py',109),
-  ('factor -> PARENIZQ div PARENDER','factor',3,'p_group','parser.py',117),
-  ('factor -> CARACTER','factor',1,'p_expression_caracter','parser.py',121),
-  ('lambda -> <empty>','lambda',0,'p_lambda','parser.py',128),
+  ('statement -> div','statement',1,'p_statement_expr','parser.py',146),
+  ('term -> factor factor1','term',2,'p_term','parser.py',161),
+  ('factor1 -> lambda','factor1',1,'p_factor1','parser.py',166),
+  ('factor1 -> SUPER factor factor2','factor1',3,'p_factor1','parser.py',167),
+  ('factor1 -> SUB factor factor3','factor1',3,'p_factor1','parser.py',168),
+  ('factor2 -> lambda','factor2',1,'p_factor2','parser.py',179),
+  ('factor2 -> SUB factor','factor2',2,'p_factor2','parser.py',180),
+  ('factor3 -> lambda','factor3',1,'p_factor2','parser.py',181),
+  ('factor3 -> SUPER factor','factor3',2,'p_factor2','parser.py',182),
+  ('expression -> term1 term','expression',2,'p_expression','parser.py',193),
+  ('term1 -> lambda','term1',1,'p_term1','parser.py',198),
+  ('term1 -> term1 term','term1',2,'p_term1','parser.py',199),
+  ('div -> div1 expression','div',2,'p_div','parser.py',207),
+  ('div1 -> lambda','div1',1,'p_div1','parser.py',216),
+  ('div1 -> div1 expression DIVISION','div1',3,'p_div1','parser.py',217),
+  ('factor -> PARENIZQ div PARENDER','factor',3,'p_group','parser.py',227),
+  ('factor -> LLAVEIZQ div LLAVEDER','factor',3,'p_group','parser.py',228),
+  ('factor -> CARACTER','factor',1,'p_expression_caracter','parser.py',233),
+  ('lambda -> <empty>','lambda',0,'p_lambda','parser.py',240),
 ]

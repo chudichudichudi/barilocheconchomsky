@@ -8,13 +8,15 @@ LAMBDA = ''
 class Nodo(object):
     texto = None
     ancho = None
-    alto = None
+    alto_arriba = None
+    alto_abajo = None
     division = False
 
-    def __init__(self, texto='', ancho=0, alto=0):
+    def __init__(self, texto='', ancho=0, alto_arriba=0, alto_abajo=0):
         self.texto = texto
         self.ancho = ancho
-        self.alto = alto
+        self.alto_arriba = alto_arriba
+        self.alto_abajo = alto_abajo
 
     def __str__(self):
         return self.texto
@@ -33,14 +35,18 @@ class Nodo(object):
             </g>
         ''' % (self.texto, self.ancho, nodo.texto),
         self.ancho + nodo.ancho,
-        max(self.alto, nodo.alto))
+        max(self.alto_arriba, nodo.alto_arriba),
+        min(self.alto_abajo, nodo.alto_abajo),
+        )
 
     def superponer(self, nodo):
         return Nodo('''
         %s %s
         ''' % (self.texto, nodo.texto),
         max(self.ancho, nodo.ancho),
-        max(self.alto, nodo.alto))
+        max(self.alto_arriba, nodo.alto_arriba),
+        min(self.alto_abajo, nodo.alto_abajo)
+        )
 
     def subir(self):
         nodo = self.a_indice()
@@ -50,7 +56,9 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        self.alto * 1.3)
+        nodo.alto_arriba + 3,
+        nodo.alto_abajo + 3,
+        )
 
     def bajar(self):
         nodo = self.a_indice()
@@ -60,7 +68,9 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        self.alto * 1.3)
+        nodo.alto_arriba - 3,
+        nodo.alto_abajo - 3,
+        )
 
     def a_indice(self):
         return Nodo('''
@@ -69,7 +79,9 @@ class Nodo(object):
         </g>
         ''' % self.texto,
         self.ancho * 0.7,
-        self.alto * 0.7)
+        self.alto_arriba * 0.7,
+        self.alto_abajo * 0.7,
+        )
 
     def dividir(self, nodo):
         DIV_ALTO = 0.0
@@ -196,7 +208,7 @@ def p_factor1(t):
         elif t[1] == '_':
             t[0] = t[2].bajar().superponer(t[3])
     else:
-        t[0] = Nodo('')
+        t[0] = Nodo()
 
 def p_factor2(t):
     '''factor2 : lambda
@@ -210,7 +222,7 @@ def p_factor2(t):
         elif t[1] == '_':
             t[0] = t[2].bajar()
     else:
-        t[0] = Nodo('')
+        t[0] = Nodo()
 
 def p_expression(t):
     '''expression : term1 term
@@ -242,7 +254,9 @@ def p_div1(t):
         t[0] = Nodo()
 
 def p_group(t):
-    '''factor : PARENIZQ div PARENDER'''
+    '''factor : PARENIZQ div PARENDER
+              | LLAVEIZQ div LLAVEDER
+    '''
     t[0] = t[2].parentizar()
 
 def p_expression_caracter(t):
@@ -255,6 +269,16 @@ def p_error(t):
 def p_lambda(t):
     '''lambda :'''
     t[0] = LAMBDA
+
+# import ply.yacc as yacc
+# parser = yacc.yacc()
+# 
+# while True:
+#     try:
+#         s = input('calc > ')   # Use raw_input on Python 2
+#     except EOFError:
+#         break
+#     parser.parse(s)
 
 import ply.yacc as yacc
 parser = yacc.yacc()
