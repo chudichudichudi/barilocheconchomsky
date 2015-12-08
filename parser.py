@@ -3,7 +3,6 @@
 #
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
-DEBUG = True
 LAMBDA = ''
 
 class Nodo(object):
@@ -18,18 +17,6 @@ class Nodo(object):
         self.ancho = ancho
         self.alto_arriba = alto_arriba
         self.alto_abajo = alto_abajo
-        if DEBUG:
-            self.texto = '''
-            <rect x="0" y="0" width="{ancho}" height="{alto_arriba}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            <rect x="0" y="0" width="{ancho}" height="{alto_abajo}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            {texto}
-            '''.format(**{
-                'texto': self.texto,
-                'alto_arriba': self.alto_arriba,
-                'alto_abajo': self.alto_abajo,
-                'ancho': self.ancho,
-            })
-            pass
 
     def __str__(self):
         return self.texto
@@ -97,7 +84,7 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
-        DIV_SEPARACION = 0.1
+        DIV_SEPARACION = 1
         DIV_ALTO = 0.2
 
         if not self:
@@ -128,7 +115,7 @@ class Nodo(object):
                'texto_arriba': self.texto,
                'texto_abajo': nodo.texto,
 
-               'offset_y_arriba': - DIV_SEPARACION, 
+               'offset_y_arriba': - 2 * DIV_SEPARACION + self.alto_abajo,
                'offset_y_abajo': nodo.alto_arriba, 
 
                'DIV_SEPARACION': DIV_SEPARACION,
