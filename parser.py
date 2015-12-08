@@ -53,8 +53,6 @@ class Nodo(object):
         )
 
     def superponer(self, nodo):
-        print(max(self.alto_arriba, nodo.alto_arriba))
-        print(min(self.alto_abajo, nodo.alto_abajo))
         return Nodo('''
         %s %s
         ''' % (self.texto, nodo.texto),
@@ -111,7 +109,6 @@ class Nodo(object):
         offset_x_abajo = ( ancho_barra - nodo.ancho ) / 2
 
         return Nodo('''
-
                 <g transform="translate({offset_x_arriba}, {offset_y_arriba})">
                     {texto_arriba}
                 </g>
@@ -142,24 +139,27 @@ class Nodo(object):
         )
 
     def parentizar(self):
+        OFFSET_X = 6
+        print(self.alto_arriba + abs(self.alto_abajo))
         return Nodo('''
-            <g transform="scale(1, %s)">
+            <g transform="scale(1, {SCALA_PAREN_IZQ})">
                 <text>(</text>
             </g>
-            <g transform="translate(%s, -%s)">
-                %s
+            <g transform="translate({OFFSET_TEXTO_X}, -{OFFSET_TEXTO_Y})">
+                {TEXTO}
             </g>
-            <g transform="translate(%s,0) scale(1, %s)">
+            <g transform="translate({OFFSET_X_PARENTESIS},0) scale(1, {SCALA_PAREN_DER})">
                 <text>)</text>
             </g>
-        ''' % (self.alto / 10,
-               6, 
-               self.alto / 2, 
-               self.texto, 
-               self.ancho + 6, #adelanto el texto un ancho del parentesis 
-               self.alto / 10),
-               self.ancho + 12 , #adelando el ancho con 12 por los parentesis
-               self.alto * (self.alto / 10) )
+        '''.format(**{
+               'SCALA_PAREN_DER': (self.alto_arriba + abs(self.alto_abajo))  / 8,
+               'SCALA_PAREN_IZQ': (self.alto_arriba + abs(self.alto_abajo))  / 8,
+               'TEXTO': self.texto,
+               'OFFSET_X_PARENTESIS': self.ancho + 6,
+               'OFFSET_TEXTO_X': OFFSET_X,
+               'OFFSET_TEXTO_Y': self.alto_arriba,
+               })
+        )
 
 tokens = (
     'CARACTER', 'DIVISION', 'SUB', 'SUPER', 'PARENIZQ', 'PARENDER',
