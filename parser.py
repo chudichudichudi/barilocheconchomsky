@@ -140,7 +140,6 @@ class Nodo(object):
 
     def parentizar(self):
         OFFSET_X = 6
-        print(self.alto_arriba + abs(self.alto_abajo))
         return Nodo('''
             <g transform="scale(1, {SCALA_PAREN_IZQ})">
                 <text>(</text>
@@ -205,8 +204,8 @@ def p_statement_expr(t):
     out.write('''<?xml version="1.0" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <g transform="translate(0, 200) scale(10)" font-family="Courier" font-size="10">
-    ''')
+            <g transform="translate(0, {ALTO_TOTAL}) scale(10)" font-family="Courier" font-size="10">
+    '''.format(**{'ALTO_TOTAL': abs(t[1].alto_arriba) +  abs(t[1].alto_abajo) }))
     out.write(t[1].texto)
     out.write('''
         </g>
