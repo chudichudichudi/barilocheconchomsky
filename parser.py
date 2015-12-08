@@ -100,7 +100,7 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
-        DIV_SEPARACION = 0.1
+        DIV_SEPARACION = 1
         DIV_ALTO = 0.2
 
         if not self:
@@ -131,7 +131,7 @@ class Nodo(object):
                'texto_arriba': self.texto,
                'texto_abajo': nodo.texto,
 
-               'offset_y_arriba': - DIV_SEPARACION, 
+               'offset_y_arriba': - 2 * DIV_SEPARACION + self.alto_abajo,
                'offset_y_abajo': nodo.alto_arriba, 
 
                'DIV_SEPARACION': DIV_SEPARACION,
