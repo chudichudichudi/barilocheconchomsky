@@ -64,15 +64,16 @@ class Nodo(object):
 
     def subir(self):
         nodo = self.a_indice()
-        return Nodo('''
+        nodo2 = Nodo('''
         <g transform="translate(0, -3)">
             %s
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto_arriba + 3,
-        min(0, nodo.alto_abajo + 3),
+        nodo.alto_arriba + 7.2,
+        min(0, nodo.alto_abajo + 7.2),
         )
+        return nodo2
 
     def bajar(self):
         nodo = self.a_indice()
@@ -82,13 +83,13 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        max(0, nodo.alto_arriba - 3),
-        nodo.alto_abajo - 3,
+        max(0, nodo.alto_arriba - 1.2),
+        nodo.alto_abajo - 1.2,
         )
 
     def a_indice(self):
         return Nodo('''
-        <g transform="scale(.7)">
+        <g transform="scale(.7) translate(0, -1.15)">
             %s
         </g>
         ''' % self.texto,
@@ -98,8 +99,8 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
-        DIV_SEPARACION = 0.5
-        DIV_ALTO = 3.3
+        DIV_SEPARACION = 1
+        DIV_ALTO = 2
 
         if not self:
             return nodo
@@ -134,18 +135,21 @@ class Nodo(object):
                'offset_y_arriba': - 2 * DIV_SEPARACION + self.alto_abajo,
                'offset_y_abajo': nodo.alto_arriba, 
 
-               'DIV_SEPARACION': DIV_SEPARACION,
+               'DIV_SEPARACION': -DIV_SEPARACION,
                'DIV_ALTO': -DIV_ALTO,
                }),
         ancho_barra,
-        self.alto_arriba - self.alto_abajo + DIV_SEPARACION * 2 + DIV_ALTO,
-        - (nodo.alto_arriba - nodo.alto_abajo) + DIV_ALTO,
+        self.alto_arriba - self.alto_abajo + DIV_SEPARACION + DIV_ALTO,
+        - (nodo.alto_arriba - nodo.alto_abajo) - DIV_SEPARACION + DIV_ALTO,
         )
+
+        print (nodo.alto_arriba, nodo.alto_abajo)
 
         return nodo
 
     def parentizar(self):
         OFFSET_X = 6
+        print(self.alto_arriba, self.alto_abajo)
         return Nodo('''
             <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {SCALA_PAREN_IZQ})">
                 <text>(</text>
@@ -157,11 +161,11 @@ class Nodo(object):
                 <text>)</text>
             </g>
         '''.format(**{
-               'SCALA_PAREN_DER': (self.alto_arriba + abs(self.alto_abajo))  / 8,
-               'SCALA_PAREN_IZQ': (self.alto_arriba + abs(self.alto_abajo))  / 8,
+               'SCALA_PAREN_DER': (self.alto_arriba + abs(self.alto_abajo))  / 10,
+               'SCALA_PAREN_IZQ': (self.alto_arriba + abs(self.alto_abajo))  / 10,
                'TEXTO': self.texto,
                'OFFSET_X_PARENTESIS': self.ancho + OFFSET_X,
-               'OFFSET_Y_PARENTESIS': -self.alto_abajo - 2,
+               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
                'OFFSET_TEXTO_X': OFFSET_X,
                }),
         self.ancho + OFFSET_X * 2,
@@ -296,8 +300,8 @@ def p_expression_caracter(t):
     'factor : CARACTER'
     texto = '''<text>%s</text>''' % t[1]
     if DEBUG:
-        texto = texto + '''<g transform="translate(0,10)"><rect fill="none" width="6" height="10" style="stroke-width:0.1;stroke:rgb(0,0,0)"/></g>'''
-    t[0] = Nodo(texto, 6, 10)
+        texto = texto + '''<g transform="translate(0,5)"><rect fill="none" width="6" height="10" style="stroke-width:0.1;stroke:rgb(0,0,0)"/></g>'''
+    t[0] = Nodo(texto, 6, 10, 0)
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
