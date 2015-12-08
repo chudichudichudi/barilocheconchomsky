@@ -72,30 +72,40 @@ class Nodo(object):
         self.alto * 0.7)
 
     def dividir(self, nodo):
+        DIV_ALTO = 0.0
+
+        if not self:
+            return nodo
+
         ancho_barra = max(self.ancho, nodo.ancho)
         offset_x_arriba = ( ancho_barra - self.ancho ) / 2
         offset_x_abajo = ( ancho_barra - nodo.ancho ) / 2
 
-        print(self.alto)
         return Nodo('''
 
-                <g transform="translate(%s, 0)">
-                    %s
-                </g>    
-                <line  y1=".72" x2="%s" y2=".72" stroke-width="0.07" stroke="black"/>
-                <g transform="translate(%s, %s)">
-                    %s
+                <g transform="translate({offset_x_arriba}, {alto_arriba})">
+                    {texto_arriba}
                 </g>
-        
-        ''' % (
-               offset_x_arriba,
-               self.texto, 
-               ancho_barra,
-               offset_x_abajo,
-               nodo.alto,
-               nodo.texto),
+
+                <g transform="translate(0, {DIV_ALTO})">                
+                    <line x1="0" x2="{ancho_barra}" stroke-width="0.07" stroke="black"/>
+                </g>
+
+                <g transform="translate({offset_x_abajo}, {alto_abajo})">
+                    {texto_abajo}
+                </g>
+                '''.format(**{
+               'offset_x_arriba': offset_x_arriba,
+               'texto_arriba': self.texto,
+               'alto_arriba': - DIV_ALTO, 
+               'ancho_barra': ancho_barra,
+               'offset_x_abajo': offset_x_abajo,
+               'alto_abajo': DIV_ALTO + nodo.alto,
+               'texto_abajo': nodo.texto,
+               'DIV_ALTO': DIV_ALTO,
+               }),
         ancho_barra,
-        self.alto + nodo.alto)
+        self.alto + nodo.alto + DIV_ALTO * 2)
 
     def parentizar(self):
         return Nodo('''
@@ -220,25 +230,16 @@ def p_div(t):
     '''div : div1 expression
     '''
     # mirar si es division div1, si lo es mover abajo y centrar en el ancho de expression
-    if t[1].division:
-        t[0] = t[1].dividir(t[2])
-    else:
-        t[0] = Nodo("%s%s" % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
-
+    t[0] = t[1].dividir(t[2])
+    
 def p_div1(t):
     '''div1 : lambda
             | div1 expression DIVISION
     '''
     if t[1] != LAMBDA:
-        if t[1].division:
-            t[0] = t[1].dividir(t[2])
-        else:
-            t[0] = Nodo(' %s%s' % (t[1], t[2]), max(t[1].ancho, t[2].ancho), 10)
-
-        t[0].division = True
+        t[0] = t[1].dividir(t[2])
     else:
-        print("lambda")
-        t[0] = Nodo('')
+        t[0] = Nodo()
 
 def p_group(t):
     '''factor : PARENIZQ div PARENDER'''
