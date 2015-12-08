@@ -3,7 +3,7 @@
 #
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
-DEBUG = True
+DEBUG = False
 LAMBDA = ''
 
 class Nodo(object):
@@ -20,8 +20,8 @@ class Nodo(object):
         self.alto_abajo = alto_abajo
         if DEBUG:
             self.texto = '''
-            <rect width="{ancho}" height="{alto_arriba}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            <rect width="{ancho}" height="{alto_abajo}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect width="{ancho}" height="{alto_arriba}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect width="{ancho}" height="{alto_abajo}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
             {texto}
             '''.format(**{
                 'texto': self.texto,
@@ -53,11 +53,14 @@ class Nodo(object):
         )
 
     def superponer(self, nodo):
+        print(max(self.alto_arriba, nodo.alto_arriba))
+        print(min(self.alto_abajo, nodo.alto_abajo))
         return Nodo('''
         %s %s
         ''' % (self.texto, nodo.texto),
         max(self.ancho, nodo.ancho),
         max(self.alto_arriba, nodo.alto_arriba),
+        
         min(self.alto_abajo, nodo.alto_abajo)
         )
 
