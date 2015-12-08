@@ -18,6 +18,18 @@ class Nodo(object):
         self.ancho = ancho
         self.alto_arriba = alto_arriba
         self.alto_abajo = alto_abajo
+        if DEBUG:
+            self.texto = '''
+            <rect width="{ancho}" height="{alto_arriba}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect width="{ancho}" height="{alto_abajo}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            {texto}
+            '''.format(**{
+                'texto': self.texto,
+                'alto_arriba': self.alto_arriba,
+                'alto_abajo': self.alto_abajo,
+                'ancho': self.ancho,
+            })
+            pass
 
     def __str__(self):
         return self.texto
@@ -46,6 +58,7 @@ class Nodo(object):
         ''' % (self.texto, nodo.texto),
         max(self.ancho, nodo.ancho),
         max(self.alto_arriba, nodo.alto_arriba),
+        
         min(self.alto_abajo, nodo.alto_abajo)
         )
 
@@ -58,7 +71,7 @@ class Nodo(object):
         ''' % nodo.texto,
         nodo.ancho,
         nodo.alto_arriba + 3,
-        nodo.alto_abajo + 3,
+        min(0, nodo.alto_abajo + 3),
         )
 
     def bajar(self):
@@ -69,7 +82,7 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto_arriba - 3,
+        max(0, nodo.alto_arriba - 3),
         nodo.alto_abajo - 3,
         )
 
@@ -126,31 +139,35 @@ class Nodo(object):
                }),
         ancho_barra,
         self.alto_arriba - self.alto_abajo + DIV_SEPARACION * 2 + DIV_ALTO,
-        nodo.alto_arriba - nodo.alto_abajo - DIV_ALTO,
+        - (nodo.alto_arriba - nodo.alto_abajo) + DIV_ALTO,
         )
 
-        print("div: %s %s %s" % (nodo.ancho, nodo.alto_arriba, nodo.alto_abajo))
         return nodo
 
     def parentizar(self):
+        OFFSET_X = 6
         return Nodo('''
-            <g transform="scale(1, %s)">
+            <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {SCALA_PAREN_IZQ})">
                 <text>(</text>
             </g>
-            <g transform="translate(%s, -%s)">
-                %s
+            <g transform="translate({OFFSET_TEXTO_X}, 0)">
+                {TEXTO}
             </g>
-            <g transform="translate(%s,0) scale(1, %s)">
+            <g transform="translate({OFFSET_X_PARENTESIS},{OFFSET_Y_PARENTESIS}) scale(1, {SCALA_PAREN_DER})">
                 <text>)</text>
             </g>
-        ''' % (self.alto / 10,
-               6, 
-               self.alto / 2, 
-               self.texto, 
-               self.ancho + 6, #adelanto el texto un ancho del parentesis 
-               self.alto / 10),
-               self.ancho + 12 , #adelando el ancho con 12 por los parentesis
-               self.alto * (self.alto / 10) )
+        '''.format(**{
+               'SCALA_PAREN_DER': (self.alto_arriba + abs(self.alto_abajo))  / 10,
+               'SCALA_PAREN_IZQ': (self.alto_arriba + abs(self.alto_abajo))  / 10,
+               'TEXTO': self.texto,
+               'OFFSET_X_PARENTESIS': self.ancho + OFFSET_X,
+               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
+               'OFFSET_TEXTO_X': OFFSET_X,
+               }),
+        self.ancho + OFFSET_X * 2,
+        self.alto_arriba,
+        self.alto_abajo
+        )
 
 tokens = (
     'CARACTER', 'DIVISION', 'SUB', 'SUPER', 'PARENIZQ', 'PARENDER',
