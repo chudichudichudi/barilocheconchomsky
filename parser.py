@@ -3,6 +3,7 @@
 #
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
+DEBUG = True
 LAMBDA = ''
 
 class Nodo(object):
@@ -17,6 +18,18 @@ class Nodo(object):
         self.ancho = ancho
         self.alto_arriba = alto_arriba
         self.alto_abajo = alto_abajo
+        if DEBUG:
+            self.texto = '''
+            <rect width="{ancho}" height="{alto_arriba}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect width="{ancho}" height="{alto_abajo}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            {texto}
+            '''.format(**{
+                'texto': self.texto,
+                'alto_arriba': self.alto_arriba,
+                'alto_abajo': self.alto_abajo,
+                'ancho': self.ancho,
+            })
+            pass
 
     def __str__(self):
         return self.texto
@@ -84,7 +97,8 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
-        DIV_ALTO = 0.0
+        DIV_SEPARACION = 0.1
+        DIV_ALTO = 0.2
 
         if not self:
             return nodo
@@ -95,29 +109,34 @@ class Nodo(object):
 
         return Nodo('''
 
-                <g transform="translate({offset_x_arriba}, {alto_arriba})">
+                <g transform="translate({offset_x_arriba}, {offset_y_arriba})">
                     {texto_arriba}
                 </g>
 
-                <g transform="translate(0, {DIV_ALTO})">                
+                <g transform="translate(0, {DIV_SEPARACION})">                
                     <line x1="0" x2="{ancho_barra}" stroke-width="0.07" stroke="black"/>
                 </g>
 
-                <g transform="translate({offset_x_abajo}, {alto_abajo})">
+                <g transform="translate({offset_x_abajo}, {offset_y_abajo})">
                     {texto_abajo}
                 </g>
                 '''.format(**{
                'offset_x_arriba': offset_x_arriba,
-               'texto_arriba': self.texto,
-               'alto_arriba': - DIV_ALTO, 
-               'ancho_barra': ancho_barra,
                'offset_x_abajo': offset_x_abajo,
-               'alto_abajo': DIV_ALTO + nodo.alto,
+               'ancho_barra': ancho_barra,
+
+               'texto_arriba': self.texto,
                'texto_abajo': nodo.texto,
-               'DIV_ALTO': DIV_ALTO,
+
+               'offset_y_arriba': - DIV_SEPARACION, 
+               'offset_y_abajo': nodo.alto_arriba, 
+
+               'DIV_SEPARACION': DIV_SEPARACION,
                }),
         ancho_barra,
-        self.alto + nodo.alto + DIV_ALTO * 2)
+        self.alto_arriba - self.alto_abajo + DIV_SEPARACION * 2,
+        nodo.alto_arriba - nodo.alto_abajo,
+        )
 
     def parentizar(self):
         return Nodo('''
@@ -257,7 +276,10 @@ def p_group(t):
     '''factor : PARENIZQ div PARENDER
               | LLAVEIZQ div LLAVEDER
     '''
-    t[0] = t[2].parentizar()
+    if t[1] == '(':
+        t[0] = t[2].parentizar()
+    else:
+        t[0] = t[2]
 
 def p_expression_caracter(t):
     'factor : CARACTER'
