@@ -70,7 +70,7 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto_arriba + 3,
+        nodo.alto_arriba + 3 ,
         min(0, nodo.alto_abajo + 3),
         )
 
@@ -147,21 +147,21 @@ class Nodo(object):
     def parentizar(self):
         OFFSET_X = 6
         return Nodo('''
-            <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {SCALA_PAREN_IZQ})">
+            <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {ESCALA_PAREN_IZQ})">
                 <text>(</text>
             </g>
             <g transform="translate({OFFSET_TEXTO_X}, 0)">
                 {TEXTO}
             </g>
-            <g transform="translate({OFFSET_X_PARENTESIS},{OFFSET_Y_PARENTESIS}) scale(1, {SCALA_PAREN_DER})">
+            <g transform="translate({OFFSET_X_PARENTESIS},{OFFSET_Y_PARENTESIS}) scale(1, {ESCALA_PAREN_DER})">
                 <text>)</text>
             </g>
         '''.format(**{
-               'SCALA_PAREN_DER': (self.alto_arriba + abs(self.alto_abajo))  / 8,
-               'SCALA_PAREN_IZQ': (self.alto_arriba + abs(self.alto_abajo))  / 8,
+               'ESCALA_PAREN_DER': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 8,
+               'ESCALA_PAREN_IZQ': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 8,
                'TEXTO': self.texto,
                'OFFSET_X_PARENTESIS': self.ancho + OFFSET_X,
-               'OFFSET_Y_PARENTESIS': -self.alto_abajo - 2,
+               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
                'OFFSET_TEXTO_X': OFFSET_X,
                }),
         self.ancho + OFFSET_X * 2,
