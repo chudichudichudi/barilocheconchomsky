@@ -20,8 +20,8 @@ class Nodo(object):
         self.alto_abajo = alto_abajo
         if DEBUG:
             self.texto = '''
-            <rect width="{ancho}" height="{alto_arriba}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            <rect width="{ancho}" height="{alto_abajo}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect x="0" y="0" width="{ancho}" height="{alto_arriba}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
+            <rect x="0" y="0" width="{ancho}" height="{alto_abajo}" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
             {texto}
             '''.format(**{
                 'texto': self.texto,
