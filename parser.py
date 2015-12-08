@@ -4,6 +4,7 @@
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
 LAMBDA = ''
+DEBUG = not True
 
 class Nodo(object):
     texto = None
@@ -84,8 +85,8 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
-        DIV_SEPARACION = 1
-        DIV_ALTO = 0.2
+        DIV_SEPARACION = 0.5
+        DIV_ALTO = 3.3
 
         if not self:
             return nodo
@@ -94,18 +95,20 @@ class Nodo(object):
         offset_x_arriba = ( ancho_barra - self.ancho ) / 2
         offset_x_abajo = ( ancho_barra - nodo.ancho ) / 2
 
-        return Nodo('''
+        nodo = Nodo('''
 
-                <g transform="translate({offset_x_arriba}, {offset_y_arriba})">
-                    {texto_arriba}
-                </g>
+                <g transform="translate(0, {DIV_ALTO})">
+                    <g transform="translate({offset_x_arriba}, {offset_y_arriba})">
+                        {texto_arriba}
+                    </g>
 
-                <g transform="translate(0, {DIV_SEPARACION})">                
-                    <line x1="0" x2="{ancho_barra}" stroke-width="0.07" stroke="black"/>
-                </g>
+                    <g transform="translate(0, {DIV_SEPARACION})">                
+                        <line x1="0" x2="{ancho_barra}" stroke-width="0.07" stroke="black"/>
+                    </g>
 
-                <g transform="translate({offset_x_abajo}, {offset_y_abajo})">
-                    {texto_abajo}
+                    <g transform="translate({offset_x_abajo}, {offset_y_abajo})">
+                        {texto_abajo}
+                    </g>
                 </g>
                 '''.format(**{
                'offset_x_arriba': offset_x_arriba,
@@ -119,11 +122,15 @@ class Nodo(object):
                'offset_y_abajo': nodo.alto_arriba, 
 
                'DIV_SEPARACION': DIV_SEPARACION,
+               'DIV_ALTO': -DIV_ALTO,
                }),
         ancho_barra,
-        self.alto_arriba - self.alto_abajo + DIV_SEPARACION * 2,
-        nodo.alto_arriba - nodo.alto_abajo,
+        self.alto_arriba - self.alto_abajo + DIV_SEPARACION * 2 + DIV_ALTO,
+        nodo.alto_arriba - nodo.alto_abajo - DIV_ALTO,
         )
+
+        print("div: %s %s %s" % (nodo.ancho, nodo.alto_arriba, nodo.alto_abajo))
+        return nodo
 
     def parentizar(self):
         return Nodo('''
@@ -270,7 +277,10 @@ def p_group(t):
 
 def p_expression_caracter(t):
     'factor : CARACTER'
-    t[0] = Nodo('''<text>%s</text>''' % t[1], 6, 10)
+    texto = '''<text>%s</text>''' % t[1]
+    if DEBUG:
+        texto = texto + '''<g transform="translate(0,10)"><rect fill="none" width="6" height="10" style="stroke-width:0.1;stroke:rgb(0,0,0)"/></g>'''
+    t[0] = Nodo(texto, 6, 10)
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
