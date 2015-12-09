@@ -134,15 +134,15 @@ class Nodo(object):
                'texto_arriba': self.texto,
                'texto_abajo': nodo.texto,
 
-               'offset_y_arriba': - 2 * DIV_SEPARACION + self.alto_abajo,
-               'offset_y_abajo': nodo.alto_arriba, 
+               'offset_y_arriba': - 3 * DIV_SEPARACION + self.alto_abajo,
+               'offset_y_abajo': nodo.alto_arriba - 2 * DIV_SEPARACION, 
 
                'DIV_SEPARACION': -DIV_SEPARACION,
                'DIV_ALTO': -DIV_ALTO,
                }),
         ancho_barra,
         self.alto_arriba - self.alto_abajo + DIV_SEPARACION + DIV_ALTO,
-        - (nodo.alto_arriba - nodo.alto_abajo) - DIV_SEPARACION + DIV_ALTO,
+        - (nodo.alto_arriba + abs(nodo.alto_abajo)) - DIV_SEPARACION + DIV_ALTO,
         )
 
         print (nodo.alto_arriba, nodo.alto_abajo)
@@ -151,7 +151,10 @@ class Nodo(object):
 
     def parentizar(self):
         OFFSET_X = 6
-        print(self.alto_arriba, self.alto_abajo)
+        CORR = 0
+        if abs(self.alto_abajo) > 4:
+            CORR = 5
+
         return Nodo('''
             <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {ESCALA_PAREN_IZQ})">
                 <text>(</text>
@@ -163,11 +166,11 @@ class Nodo(object):
                 <text>)</text>
             </g>
         '''.format(**{
-               'ESCALA_PAREN_DER': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 8,
-               'ESCALA_PAREN_IZQ': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 8,
+               'ESCALA_PAREN_DER': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 7,
+               'ESCALA_PAREN_IZQ': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 7,
                'TEXTO': self.texto,
                'OFFSET_X_PARENTESIS': self.ancho + OFFSET_X,
-               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
+               'OFFSET_Y_PARENTESIS': abs(self.alto_abajo) - CORR,
                'OFFSET_TEXTO_X': OFFSET_X,
                }),
         self.ancho + OFFSET_X * 2,
@@ -218,9 +221,11 @@ def p_statement_expr(t):
     out = open(FILE_NAME, 'w')
     out.write('''<?xml version="1.0" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <g transform="translate(0, {ALTO_TOTAL}) scale(10)" font-family="Courier" font-size="10">
-    '''.format(**{'ALTO_TOTAL': (abs(t[1].alto_arriba) +  abs(t[1].alto_abajo)) * 10 }))
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="400" height="300" viewbox="0 0 400 300">
+            <g transform="translate(0, {ALTO_TOTAL}) scale(2)" font-family="Courier" font-size="10">
+    '''.format(**{
+        'ALTO_TOTAL': (abs(t[1].alto_arriba) +  abs(t[1].alto_abajo) ) * 2
+        }))
     out.write(t[1].texto)
     out.write('''
         </g>
