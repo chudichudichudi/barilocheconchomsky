@@ -1,10 +1,13 @@
+import sys
+import ply.yacc as yacc
+
 # -----------------------------------------------------------------------------
 # parser.py
 #
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
 LAMBDA = ''
-DEBUG = not True
+ESCALA = 2
 
 class Nodo(object):
     texto = None
@@ -18,18 +21,6 @@ class Nodo(object):
         self.ancho = ancho
         self.alto_arriba = alto_arriba
         self.alto_abajo = alto_abajo
-        if DEBUG:
-            self.texto = '''
-            <rect width="{ancho}" height="{alto_arriba}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            <rect width="{ancho}" height="{alto_abajo}" fill="none" style="fill-opacity:0;stroke-width:0.1;stroke:rgb(0,0,0)"/>
-            {texto}
-            '''.format(**{
-                'texto': self.texto,
-                'alto_arriba': self.alto_arriba,
-                'alto_abajo': self.alto_abajo,
-                'ancho': self.ancho,
-            })
-            pass
 
     def __str__(self):
         return self.texto
@@ -159,8 +150,6 @@ class Nodo(object):
         - (nodo.alto_arriba + abs(nodo.alto_abajo)) - DIV_SEPARACION + DIV_ALTO,
         )
 
-        print (nodo.alto_arriba, nodo.alto_abajo)
-
         return nodo
 
     def parentizar(self):
@@ -215,7 +204,7 @@ t_LLAVEIZQ     = r'\{'
 t_ignore = " "
 
 def t_error(t):
-    print("Caracter ilegal '%s'" % t.value[0])
+    print("Caracter ilegal '%s'" % t.value[0], file=sys.stderr)
     t.lexer.skip(1)
     
 # Build the lexer
@@ -235,20 +224,7 @@ names = { }
 
 def p_statement_expr(t):
     '''statement : div'''
-    out = open(FILE_NAME, 'w')
-    out.write('''<?xml version="1.0" standalone="no"?>
-        <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="400" height="300" viewbox="0 0 400 300">
-            <g transform="translate(0, {ALTO_TOTAL}) scale(2)" font-family="Courier" font-size="10">
-    '''.format(**{
-        'ALTO_TOTAL': (abs(t[1].alto_arriba) +  abs(t[1].alto_abajo) ) * 2
-        }))
-    out.write(t[1].texto)
-    out.write('''
-        </g>
-    </svg>
-    ''')
-    out.close()
+    t[0] = t[1]
 
 def p_term(t):
     '''term : factor factor1
@@ -322,33 +298,30 @@ def p_group(t):
 
 def p_expression_caracter(t):
     'factor : CARACTER'
-    texto = '''<text>%s</text>''' % t[1]
-    if DEBUG:
-        texto = texto + '''<g transform="translate(0,5)"><rect fill="none" width="6" height="10" style="stroke-width:0.1;stroke:rgb(0,0,0)"/></g>'''
-    t[0] = Nodo(texto, 6, 10, 0)
+    t[0] = Nodo('''<text>%s</text>''' % t[1], 6, 10, 0)
 
 def p_error(t):
-    print("Syntax error at '%s'" % t.value)
+    print("Syntax error at '%s'" % t.value, file=sys.stderr)
 
 def p_lambda(t):
     '''lambda :'''
     t[0] = LAMBDA
 
-# import ply.yacc as yacc
-# parser = yacc.yacc()
-# 
-# while True:
-#     try:
-#         s = input('calc > ')   # Use raw_input on Python 2
-#     except EOFError:
-#         break
-#     parser.parse(s)
-
-import ply.yacc as yacc
 parser = yacc.yacc()
 
-import sys
-
-FILE_NAME = str(sys.argv[2])
-
-parser.parse(str(sys.argv[1]))
+if __name__ == '__main__':
+    out = parser.parse(str(sys.argv[1]))
+    print('''<?xml version="1.0" standalone="no"?>
+        <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 {ALTO_TOTAL} {ANCHO_TOTAL}">
+            <g transform="translate(0, {ALTO_TOTAL}) scale({ESCALA})" font-family="Courier" font-size="10">
+    '''.format(**{
+        'ALTO_TOTAL': (abs(out.alto_arriba) +  abs(out.alto_abajo) ) * ESCALA,
+        'ANCHO_TOTAL': out.ancho * ESCALA,
+        'ESCALA': ESCALA
+        }), file=sys.stdout)
+    print(out.texto, file=sys.stdout)
+    print('''
+        </g>
+    </svg>
+    ''', file=sys.stdout)
