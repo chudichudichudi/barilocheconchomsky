@@ -38,6 +38,7 @@ class Nodo(object):
         return self.texto != ''
 
     def concatenar(self, nodo):
+        '''Dado un nodo, si no es el nodo vacio se concatenan uno al lado del otro y se calcula el nuevo ancho'''
         if nodo.texto == '':
             return self
         
@@ -53,6 +54,7 @@ class Nodo(object):
         )
 
     def superponer(self, nodo):
+        '''Dado un nodo se posicionan los nodos uno encima del otro, sirve para las producciones E^E, E_E, E_E^E E^E_E '''
         return Nodo('''
         %s %s
         ''' % (self.texto, nodo.texto),
@@ -63,6 +65,7 @@ class Nodo(object):
         )
 
     def subir(self):
+        '''Se achica y se mueve hacia arriba 3 puntos'''
         nodo = self.a_indice()
         nodo2 = Nodo('''
         <g transform="translate(0, -3)">
@@ -72,12 +75,11 @@ class Nodo(object):
         nodo.ancho,
         nodo.alto_arriba + 3 ,
         min(0, nodo.alto_abajo + 3),
-#        nodo.alto_arriba + 7.2,
-#        min(0, nodo.alto_abajo + 7.2),
         )
         return nodo2
 
     def bajar(self):
+        '''Se achica y se mueve hacia abajo 3 puntos'''
         nodo = self.a_indice()
         return Nodo('''
         <g transform="translate(0, 3)">
@@ -90,6 +92,7 @@ class Nodo(object):
         )
 
     def a_indice(self):
+        '''Se achica el nodo en un 30%'''
         return Nodo('''
         <g transform="scale(.7) translate(0, -1.15)">
             %s
@@ -101,6 +104,17 @@ class Nodo(object):
         )
 
     def dividir(self, nodo):
+        '''
+        Si el nodo actual no es el nodo vacio, es que tengo una division a mi izquierda
+        Se calculan los offset_x_arriba y offset_x_abajo para centrar horizontalmente ambas partes
+        de la division. 
+        
+        Se dibuja el numerador desde la base del nodo actual mas el alto de la division sumado un espacio en blanco
+        para respetar las proporciones.
+        
+        Se dibuja el denominador corriendolo en y tanto como el techo mas el alto de la division sumado un espacio en blanco
+        para respetar las proporciones.
+        '''
         DIV_SEPARACION = 1
         DIV_ALTO = 2
 
@@ -150,6 +164,9 @@ class Nodo(object):
         return nodo
 
     def parentizar(self):
+        '''
+        El nodo se envuelve a si mismo en parentesis, se escala el mismo de acorde a su alto
+        '''
         OFFSET_X = 6
         CORR = 0
         if abs(self.alto_abajo) > 4:
