@@ -176,10 +176,10 @@ class Nodo(object):
                 </g>
             </g>
         '''.format(**{
-               'ESCALA_PAREN': (self.alto_arriba - self.alto_abajo ) / 7,
+               'ESCALA_PAREN': (self.alto_arriba + abs(self.alto_abajo) ) / 8,
                'TEXTO': self.texto,
                'OFFSET_X_PARENTESIS': self.ancho + ANCHO_CARACTER,
-               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
+               'OFFSET_Y_PARENTESIS': - self.alto_abajo,
                'OFFSET_TEXTO_X': ANCHO_CARACTER,
                }),
         self.ancho + ANCHO_CARACTER * 2,

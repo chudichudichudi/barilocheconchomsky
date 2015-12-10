@@ -20,7 +20,7 @@ formulas = [
     ("(E/E/E)", "Paréntesis en división"),
     ("({A + {D/E}} / C)-I", ""),
     ("(A^B_DC^D/E^F_G+H)-I", ""),
-    ("(A/B/C/D/E/F/G/H/I/J/K)", ""),
+    ("(A/B/C/D/E)", ""),
     ("(A^BC^D/E^F_G+H)-I", "Ejemplo de la cátedra"),
 ]
 
