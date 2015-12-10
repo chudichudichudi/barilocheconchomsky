@@ -7,7 +7,8 @@ import ply.yacc as yacc
 # Parser that outputs a SVG 
 # -----------------------------------------------------------------------------
 LAMBDA = ''
-ESCALA = 2
+ESCALA = 8
+ANCHO_CARACTER = 6
 
 class Nodo(object):
     texto = None
@@ -64,8 +65,8 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        nodo.alto_arriba + 3 ,
-        min(0, nodo.alto_abajo + 3),
+        nodo.alto_arriba + 4.0,
+        min(0, nodo.alto_abajo + 4.0),
         )
         return nodo2
 
@@ -78,8 +79,8 @@ class Nodo(object):
         </g>
         ''' % nodo.texto,
         nodo.ancho,
-        max(0, nodo.alto_arriba - 1.2),
-        nodo.alto_abajo - 1.2,
+        max(0, nodo.alto_arriba - 2.2),
+        nodo.alto_abajo - 2.2,
         )
 
     def a_indice(self):
@@ -107,7 +108,7 @@ class Nodo(object):
         para respetar las proporciones.
         '''
         DIV_SEPARACION = 1
-        DIV_ALTO = 2
+        DIV_ALTO = 2.9
 
         if not self:
             return nodo
@@ -123,8 +124,8 @@ class Nodo(object):
                         {texto_arriba}
                     </g>
 
-                    <g transform="translate(0, {DIV_SEPARACION})">                
-                        <line x1="0" x2="{ancho_barra}" stroke-width="0.07" stroke="black"/>
+                    <g transform="translate(0, 0)">                
+                        <line x1="0" x2="{ancho_barra}" stroke-width="0.4" stroke="black"/>
                     </g>
 
                     <g transform="translate({offset_x_abajo}, {offset_y_abajo})">
@@ -139,15 +140,14 @@ class Nodo(object):
                'texto_arriba': self.texto,
                'texto_abajo': nodo.texto,
 
-               'offset_y_arriba': - 3 * DIV_SEPARACION + self.alto_abajo,
-               'offset_y_abajo': nodo.alto_arriba - 2 * DIV_SEPARACION, 
+               'offset_y_arriba': - DIV_SEPARACION + self.alto_abajo,
+               'offset_y_abajo': nodo.alto_arriba + DIV_SEPARACION, 
 
-               'DIV_SEPARACION': -DIV_SEPARACION,
                'DIV_ALTO': -DIV_ALTO,
                }),
         ancho_barra,
         self.alto_arriba - self.alto_abajo + DIV_SEPARACION + DIV_ALTO,
-        - (nodo.alto_arriba + abs(nodo.alto_abajo)) - DIV_SEPARACION + DIV_ALTO,
+        -nodo.alto_arriba + nodo.alto_abajo - DIV_SEPARACION + DIV_ALTO,
         )
 
         return nodo
@@ -156,30 +156,33 @@ class Nodo(object):
         '''
         El nodo se envuelve a si mismo en parentesis, se escala el mismo de acorde a su alto
         '''
-        OFFSET_X = 6
-        CORR = 0
-        if abs(self.alto_abajo) > 4:
-            CORR = 5
 
         return Nodo('''
-            <g transform="translate(0, {OFFSET_Y_PARENTESIS}) scale(1, {ESCALA_PAREN_IZQ})">
-                <text>(</text>
+            <g transform="translate(0, 1.5) translate(0, {OFFSET_Y_PARENTESIS})">
+                <g transform="scale(1, {ESCALA_PAREN})">
+                    <g transform="translate(0, -1.5)">
+                    <text>(</text>
+                    </g>
+                </g>
             </g>
             <g transform="translate({OFFSET_TEXTO_X}, 0)">
                 {TEXTO}
             </g>
-            <g transform="translate({OFFSET_X_PARENTESIS},{OFFSET_Y_PARENTESIS}) scale(1, {ESCALA_PAREN_DER})">
-                <text>)</text>
+            <g transform="translate(0, 1.5) translate({OFFSET_X_PARENTESIS},{OFFSET_Y_PARENTESIS})">
+                <g transform="scale(1, {ESCALA_PAREN})">
+                    <g transform="translate(0, -1.5)">
+                        <text>)</text>
+                    </g>
+                </g>
             </g>
         '''.format(**{
-               'ESCALA_PAREN_DER': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 7,
-               'ESCALA_PAREN_IZQ': (abs(self.alto_arriba) + abs(self.alto_abajo))  / 7,
+               'ESCALA_PAREN': (self.alto_arriba - self.alto_abajo ) / 7,
                'TEXTO': self.texto,
-               'OFFSET_X_PARENTESIS': self.ancho + OFFSET_X,
-               'OFFSET_Y_PARENTESIS': abs(self.alto_abajo) - CORR,
-               'OFFSET_TEXTO_X': OFFSET_X,
+               'OFFSET_X_PARENTESIS': self.ancho + ANCHO_CARACTER,
+               'OFFSET_Y_PARENTESIS': -self.alto_abajo,
+               'OFFSET_TEXTO_X': ANCHO_CARACTER,
                }),
-        self.ancho + OFFSET_X * 2,
+        self.ancho + ANCHO_CARACTER * 2,
         self.alto_arriba,
         self.alto_abajo
         )
@@ -298,7 +301,7 @@ def p_group(t):
 
 def p_expression_caracter(t):
     'factor : CARACTER'
-    t[0] = Nodo('''<text>%s</text>''' % t[1], 6, 10, 0)
+    t[0] = Nodo('''<text>%s</text>''' % t[1], ANCHO_CARACTER, 10, 0)
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value, file=sys.stderr)
